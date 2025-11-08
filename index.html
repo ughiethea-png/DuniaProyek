@@ -7,17 +7,17 @@
 
 </head>
 <body>
-	
-		<form id="loginForm">
-  <div class="field">
-    <label>Username : <input type="text" name="username" required></label>
-  </div>
-  <div class="field">
-    <label>Password : <input type="password" name="password" required></label>
-  </div>
-  <button class="btn" type="submit">🔑 Login</button>
-</form>
 
+		<div class="modal">
+		  <h2>Login</h2>
+		  <form id="loginForm">
+			<div class="field"><label>Username : <input type="text" name="username" required></label></div>
+			<div class="field"><label>Password : <input type="password" name="password" required></label></div>
+			<button class="btn" type="submit" style="width:100%;">🔑Login</button>
+		  </form><br>
+		  <button class="btn" onclick="window.location.href='register.html'" style="width:100%;">Registrasi</button>
+		</div>
+		
 <script>
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -52,3 +52,4 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 	
 </body>
 </html>
+
