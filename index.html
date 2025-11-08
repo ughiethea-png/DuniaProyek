@@ -1,0 +1,1479 @@
+  <!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aplikasi Web Base</title><link rel="stylesheet" href="asset/style.css">
+
+</head>
+<body>
+<button id="toggleBtn" onclick="toggleSidebar()">☰</button>
+<div id="sidebar"> 
+	<div class="sub"><b>PANDUAN WEB</b></div>
+	<div class="menu-item" onclick="showContent('tag', this)"><b>TAG HTML</b></div>	  
+	<div class="menu-item" onclick="showContent('html', this)"><b>roadmap HTML</b></div>
+	<div class="menu-item" onclick="showContent('php', this)"><b>Koneksi PHP</b></div>
+	<div class="menu-item" onclick="showContent('hosting', this)"><b>HOSTING</b></div>
+	<div class="menu-item" onclick="window.location.href='kode.html'"><b>KUPAS KODE</b></div>
+	
+	<details><summary class="judul"><b>CONTOH WEB</b></summary>  
+<!--berfungsi untuk mengacu ke elemen HTML yang sedang diklik — dalam hal ini, elemen <div class="menu-item"> itu sendiri.
+Penjelasan detail:
+
+Ketika pengguna mengklik <div> tersebut, fungsi JavaScript showContent('simpan', this) dipanggil.
+Parameter pertama 'simpan' adalah string biasa.
+Parameter kedua this bernilai referensi ke elemen HTML yang men-trigger event (elemen yang diklik).
+
+Contohnya:
+function showContent(menuName, element) {
+  console.log(menuName); // hasil: "simpan"
+  console.log(element);  // hasil: <div class="menu-item"><b>SIMPAN/CREAT</b></div>
+  
+  // kamu bisa ubah tampilannya, misalnya:
+  element.style.backgroundColor = 'lightblue';
+}
+Kesimpulan:
+this di sini = elemen HTML yang sedang menjalankan event onclick-nya sendiri.
+Dengan begitu, kamu bisa memanipulasi elemen itu langsung dari dalam fungsi JavaScript 
+tanpa perlu mencari ulang dengan document.querySelector() atau getElementById().-->
+	  <div class="menu-item" onclick="showContent('login', this)"><b>LOGIN</b></div>
+	  <div class="menu-item" onclick="showContent('form', this)"><b>FORM</b></div>	  
+	</details>
+	
+	<div class="mainheader"><b>BAHASA</b></div> 	 
+	  <div class="menu-item" onclick="window.location.href='html.html'"><b>HTML</b></div>
+	  <div class="menu-item" onclick="window.location.href='html.html'"><b>CSS</b></div>
+	  <div class="menu-item" onclick="window.location.href='javascrip.html'"><b>JAVASCRIPT</b></div>
+	  <div class="menu-item" onclick="window.location.href='php.html'"><b>PHP</b></div>
+	  <div class="menu-item" onclick="window.location.href='mysql.html'"><b>MySQL</b></div>
+	</details>
+	
+	<div class="menu-item" style="background: yellow; color:black;" onclick="showContent('Info', this)"><b>INFO</b></div>	
+</div>
+
+<div id="main">
+	<div class="penjelasan"><h1>SELAMAT DATANG</h1>
+		<p>Di sini akan dibahas tentang materi pembuatan web dengan bahasa HTML</p>
+	</div>
+</div>
+<div id="dasar" style="display:none">
+	<div class="penjelasan"><h1>KONTEN SELANJUTNYA SEDANG DI PERSIAPKAN</h1>
+		<p>Di sini akan dibahas tentang materi pembuatan web dengan bahasa HTML</p>
+		<button onclick="loadDetail()">Tampilkan konten html</button>			
+	</div>
+</div>
+
+
+<!-- WEB HOSTING -->
+<div id="hosting" style="display:none"><div class="mainheader">WEB HOSTING</div>
+<article class="penjelasan">
+      <b>Hosting Gratis — Contoh penyedia</b>
+      <ul class="penjelasan">
+        <li><a href="https://www.infinityfree.net" target="_blank">InfinityFree</a> (mendukung PHP & MySQL)</li>
+        <li><a href="https://www.000webhost.com" target="_blank">000WebHost</a> (mendukung PHP & MySQL)</li>
+        <li><a href="https://pages.github.com" target="_blank">GitHub Pages</a> (hanya static, tanpa database)</li>
+        <li><a href="https://www.netlify.com" target="_blank">Netlify</a> (static, tanpa database bawaan)</li>
+        <li><a href="https://vercel.com" target="_blank">Vercel</a> (static/frontend, tanpa database bawaan)</li>
+      </ul>
+
+      <b>Kelebihan</b>
+      <ul class="penjelasan">
+        <li>Tidak ada biaya — cocok untuk belajar atau testing.</li>
+        <li>Integrasi Git (GitHub Pages, Netlify, Vercel) — otomatis deploy saat push.</li>
+        <li>Cepat men-deploy proyek statis.</li>
+      </ul>
+
+      <b>Kekurangan</b>
+      <ul class="penjelasan">
+        <li>Resource (CPU, RAM, bandwidth) terbatas.</li>
+        <li>Biasanya domain berupa subdomain (contoh: <code>namasite.000webhostapp.com</code>).</li>
+        <li>Potensi iklan, pembatasan fitur, atau ketidakstabilan server.</li>
+        <li>Tidak ideal untuk website bisnis atau lalu lintas tinggi.</li>
+      </ul>
+<hr>
+
+
+      <b>Hosting Berbayar — Contoh penyedia</b>
+      <ul class="penjelasan">
+        <li><a href="https://www.niagahoster.co.id" target="_blank">Niagahoster (ID)</a> — mendukung PHP & MySQL</li>
+        <li><a href="https://www.hostinger.com" target="_blank">Hostinger</a> — mendukung PHP & MySQL</li>
+        <li><a href="https://www.siteground.com" target="_blank">SiteGround</a> — mendukung PHP & MySQL</li>
+        <li><a href="https://www.bluehost.com" target="_blank">Bluehost</a> — mendukung PHP & MySQL</li>
+        <li><a href="https://idcloudhost.com" target="_blank">IDCloudHost (ID)</a> — mendukung berbagai database (MySQL, PostgreSQL)</li>
+        <li><a href="https://www.hostgator.com" target="_blank">HostGator</a> — mendukung PHP & MySQL</li>
+      </ul>
+
+      <b>Kelebihan</b>
+      <ul class="penjelasan">
+        <li>Resource lebih besar & stabil; cocok untuk bisnis.</li>
+        <li>Custom domain (.com, .id, dll) dan SSL native.</li>
+        <li>Customer support 24/7 dan opsi server region untuk latency rendah.</li>
+        <li>Pilihan upgrade ke VPS / Dedicated saat diperlukan.</li>
+      </ul>
+
+      <b>Kekurangan</b>
+      <ul class="penjelasan">
+        <li>Biaya berulang (bulanan/tahunan).</li>
+        <li>Konfigurasi awal sedikit lebih teknis dibanding hosting gratis.</li>
+        <li>Jika traffic besar, biaya meningkat saat upgrade.</li>
+      </ul>
+    </article>
+
+	<button onclick="showDetail('simpan-db')">Lihat Detail</button>
+</p></div>
+
+
+<!-- APLIKASI FORM UNTUK TAMBAH USER -->
+<div id="form" style="display:none">
+	<div class="mainheader">APLIKASI FORM UNRUK TAMBAH USER</div>	
+	<div class="menu-item" onclick="showContent('simpan', this)"><b>SIMPAN/CREAT</b></div>	  
+	<div class="menu-item" onclick="showContent('baca', this)"><b>BACA/READ</b></div>
+	<div class="menu-item" onclick="showContent('edit', this)"><b>EDIT/UPDATE</b></div>
+	<div class="menu-item" onclick="showContent('hapus', this)"><b>HAPUS/DELETE</b></div>
+	<div class="menu-item" onclick="showContent('Array', this)"><b>FULL CRUD</b></div>
+	  
+	<em><xmp class="kode"></xmp></em>
+	<button onclick="showDetail('simpan-db')">Lihat Detail</button>
+</div>
+
+<!-- SIMPAN / CREAT --------------------------------------------------------------------------------->
+<div id="simpan" style="display:none">
+	<div class="mainheader">PROSES SIMPAN/CREAT-> WEB-JS-PHP-SERVER MYSQL</div>
+<p class="penjelasan"><button onclick="backToMenu('form')">Kembali</button>
+<b style="color: red;">🧠 Alur proses penyimpanan Web-base:</b>
+<b class="konten" onclick="showDetail('index')">Proses HTML : <em>index.html</em>
+</b>1. User isi form
+2. klik Submit
+
+<b class="konten" onclick="showDetail('script')">Proses Javascript : <em>script.js</em>
+</b>1. Mencari elemen form
+2. Menambahkan event submit/kirim dari tombol dll
+3. ncegah reload halaman (e.preventDefault()).
+4. ambil/simpan ke variabel semua nilai input → seperti formData.
+5. fetch() mengirim data JSON ke file.php.
+6. JS menerima balasan (res.json()).
+7. JS menampilkan data.message.
+8. Jika data.success === true → form dikosongkan dan daftar user di-refresh.
+
+<b>Proses Server PHP :
+</b><b class="konten" onclick="showDetail('db')">1. Koneksi database : <em>koneksi-lokal.php</em></b>
+<b class="konten" onclick="showDetail('simpan_data')">2. Penyimpanan : <em>simpan_user.php
+</em></b>	- terima dan baca data JSON dari Javascrip
+	- Ambil Variabel / data json 
+	- Validasi data 
+	- Memproses (misal menyimpan ke database)
+	- Mengembalikan hasil dalam format JSON
+<b class="konten" onclick="showDetail('tabel')">3. Tabel database : <em>tabel_user.sql</em></b></p>
+</div>
+
+<!-- 1. index.html --------------------------------------------------------------------------------->
+<div id="index" style="display:none">
+	<div class="mainheader"><b>Tampilan Form Input HTML</b></div>
+	<div class="penjelasan"><button onclick="backToMenu('simpan')">Kembali</button>
+	<fieldset><form id="formUser"><label><b>Form Tambah User	</b></label>
+	<label>Nama 		</label>:<input type="text" id="nama" required>    
+	<label>Username 	</label>:<input type="text" id="username" required>    
+	<label>Password 	</label>:<input type="password" id="password" required>    
+	<label>Konf. Pass. 	</label>:<input type="password" id="confirm_password" required>	<button type="submit">Simpan</button>
+	</form></fieldset><button onclick="showDetail('simpan-index')">Lihat kode Form Input HTML</button>
+	</div>
+</div>
+<!-- Detail Penjelasan Kode index.js --------------------------------------------------------------------------------->
+<div id="simpan-index" style="display:none">
+	<div class="mainheader"><b>Kode Form Input HTML</b>
+	<button onclick="showDetail('index')">Kembali</button></div>
+<em><xmp class="kode"><b>Form Tambah User</b>
+<form id="formUser">
+	<label>Nama</label>
+	<input type="text" id="nama" required>    
+	<label>Username</label>
+	<input type="text" id="username" required>    
+	<label>Password</label>
+	<input type="password" id="password" required>    
+	<label>Konfirmasi Password</label>
+	<input type="password" id="confirm_password" required>
+	<button type="submit">Simpan</button>
+</form></xmp></em>
+</div>
+<!-- 2. script.js ( kode )--------------------------------------------------------------------------------->
+<div id="script" style="display:none">
+	<div class="mainheader">(script.js) Kode Javascript kirim ke simpan_user.php
+	<button onclick="backToMenu('simpan')">Kembali ke main</button></div>
+	<em class="penjelasan"><xmp class="kode">//script.js untuk simpan form_user
+	const form = document.getElementById("formUser"); //1. Mencari elemen
+
+    form.addEventListener("submit", async function(e){ //2. Menambahkan event submit
+      e.preventDefault(); //3. mencegah browser reload
+	  
+	  let formData = { //4. simpan isi data formUser ke variabel formData
+        nama: document.getElementById("nama").value, //mengambil elemen dan hasil
+        username: document.getElementById("username").value,
+        password: document.getElementById("password").value,
+        confirm_password: document.getElementById("confirm_password").value
+      };
+	  
+      let res = await fetch("simpan_user.php", { //5.Kirim data ke server lewat simpan.php
+        method: "POST", // HTTP method simpan
+        headers: {"Content-Type": "application/json"}, // tipe data yang dikirim
+        body: JSON.stringify(formData) // isi data dikirim dalam format JSON
+      });
+
+      let data = await res.json(); //baca isi respons, ubah dari teks JSON ke objek JavaScript.
+      alert(data.message); // tampilkan pesan dari server
+
+      if(data.success){ //cek jika sukses lanjutkan perintah
+        form.reset(); //kosongkan form
+        loadUsers(); // bisa lanjut tampilkan data dll
+      }
+    }); </xmp>
+	<button onclick="showDetail('simpan-script')">Lihat Detail Penjelasan Kode</button></em>	
+</div>
+<!-- Detail Penjelasan Kode script.js --------------------------------------------------------------------------------->
+<div id="simpan-script" style="display:none">
+	<div class="mainheader">📚 Penjelasan Kode Javascrip
+	<button onclick="backToMenu('script')">Kembali ke kode</button></div>
+	<div class="penjelasan"><b style="color: red">10 proses penyimpanan JS ke server :</b>
+<details><summary class="sub"><b>1. Mencari elemen di HTML ➡️ document.getElementById("formUser");</b>
+</summary><em><xmp class="kode">const form = document.getElementById("formUser");
+</xmp></em>	<b>Penjelasan :
+	</b>➡️ Mencari elemen di HTML yang punya id="formUser".
+	➡️ Hasil pencarian itu adalah objek DOM dan disimpan di variabel form.
+	➡️ const artinya nilai variabelnya tidak akan diganti ke referensi lain (tetap menunjuk ke elemen yang sama).
+
+	<b style="color: red">Note :</b>
+	- Jika elemen dengan id itu tidak ada, form akan bernilai null dan baris berikutnya bisa error.
+	- Jadi pastikan elemen ada di HTML sebelum script ini dijalankan (atau jalankan script di bawah tag body).
+</details>
+<details><summary class="sub"><b>2. Menambahkan event addEventListener("submit", ...)</b>
+</summary><em><xmp class="kode">form.addEventListener("submit", async function(e){
+</xmp></em><b>Penjelasan :
+</b>	➡️ Menambahkan event listener untuk mendeteksi saat form disubmit (misal tombol "Submit" ditekan).
+	➡️ addEventListener("submit", ...) akan men-trigger fungsi di dalamnya setiap kali form dikirim.
+	➡️ async membuat fungsi itu asynchronous, jadi di dalamnya kamu bisa memakai await untuk proses yang menunggu 
+	  (misalnya kirim data ke server dengan fetch).
+	  
+	<b style="color: red">Note :</b>
+	➡️ Kalau form disubmit tanpa listener ini, browser akan reload halaman otomatis dan mengirimkan data ke URL di action form.
+	➡️ Tapi kalau kamu ingin mengontrol pengiriman manual pakai JavaScript, maka listener ini yang digunakan.
+</details>
+<details><summary class="sub"><b>3. mencegah reload ➡️ e.preventDefault()</b>
+</summary><em><xmp class="kode">e.preventDefault();
+</xmp></em>	<b>Penjelasan :
+	</b>➡️ e adalah event object, otomatis dikirim oleh browser ke fungsi event listener.
+	➡️ e.preventDefault() mencegah perilaku default form, yaitu mengirim data dan merefresh halaman.
+	➡️ Ini penting supaya kamu bisa:
+		- mengambil data input secara manual (document.getElementById(...).value)
+		- melakukan validasi dulu (misal pastikan password cocok)
+		- kirim data ke server pakai fetch() tanpa reload halaman.
+
+	<b style="color: red">Note : Saat kamu tekan tombol Kirim, maka:</b>
+	1. Event “submit” terpicu.
+	2. Fungsi di dalam addEventListener dijalankan.
+	3. e.preventDefault() mencegah browser reload.
+	4. Kamu bebas mengatur langkah berikutnya — ambil data, validasi, kirim pakai AJAX, dsb.
+</details>
+<details><summary class="sub"><b>4. mengambil hasil elemen ➡️ document.getElementById("nama").value, </b>
+</summary><em><xmp class="kode">let formData = {
+        nama: document.getElementById("nama").value,
+        username: document.getElementById("username").value,
+        password: document.getElementById("password").value,
+        confirm_password: document.getElementById("confirm_password").value
+      };
+</xmp></em>	<b>Penjelasan :</b>
+	<em style="color:blue">document.getElementById("...")</em> mengambil elemen DOM dengan id yang sama
+	<em style="color:blue">.value</em> membaca nilai input (string) dari input/textarea/select → membaca isi text "yani"
+	<em style="color:blue">let formData = {...};</em>Hasilnya disimpan di objek formData dengan properti nama, username, password, confirm_password.
+	➡️ hasil :
+		<em style="color:blue">formData={
+		  nama: "yani",
+		  username: "yani123",
+		  password: "rahasia",
+		  confirm_password: "rahasia"
+		}</em>
+	<b style="color: red">Note :</b>
+	➡️ Element tidak ada → error
+	Jika elemen dengan id tidak ada, document.getElementById(...) mengembalikan null dan .value akan menimbulkan TypeError.
+	➡️ Solusinya: 
+	periksa keberadaan atau gunakan optional chaining: document.getElementById("nama")?.value ?? "".
+	➡️ Whitespace & sanitasi
+	Pengguna sering memasukkan spasi di awal/akhir. Gunakan .trim() untuk nama/username (bukan untuk password, kecuali memang diinginkan).
+	➡️ Konfirmasi password
+	confirm_password seharusnya hanya dipakai di klien untuk memvalidasi kecocokan. Tidak perlu mengirim confirm_password ke server.
+	➡️ Keamanan: password mentah
+	Password dikirimkan dalam plaintext dari browser ke server via HTTPS biasanya, 
+	itu standar. Jangan menyimpan password plaintext di server — itu tanggung jawab backend (hashing, salting). 
+	Di klien, jangan log password ke console.
+	➡️ Validasi klien vs server
+	Validasi klien baik untuk UX, tapi wajib selalu divalidasi ulang di server 
+	username unik, panjang password, karakter, dll).
+	➡️ CSRF & Headers
+	Saat mengirim request AJAX, pastikan mekanisme CSRF/token di-handle jika perlu.
+	➡️ Tipe data & encoding
+	Jika kirim JSON, gunakan JSON.stringify(formData); jika kirim form (multi-part/file), gunakan FormData.
+</details>
+<details><summary class="sub"><b>5. Mengirim data ➡️ fetch("simpan.php", {...})</b>
+</summary><em><xmp class="kode">let res = await fetch("simpan.php", {
+       method: "POST",                    // HTTP method
+	  headers: {"Content-Type": "application/json"}, // tipe data yang dikirim
+	  body: JSON.stringify(formData)     // isi data dikirim dalam format JSON
+      });
+</xmp></em>	<b>Penjelasan :</b>
+	<em style="color:blue">let res = await fetch("simpan.php", {...})</em>
+	➡️ fetch() adalah fungsi bawaan JavaScript untuk melakukan permintaan HTTP (seperti GET, POST, PUT, DELETE, dll).
+	➡️ "simpan.php" adalah URL tujuan, biasanya file PHP di server yang akan menerima data.
+	➡️ Objek di { ... } adalah opsi konfigurasi dari request.
+
+	<b>📦 Isi konfigurasi Objek di { ... }:</b>
+	✴️ method: "POST"
+	➡️ Artinya kamu mengirim data ke server (bukan mengambil data seperti GET).
+	➡️ Biasanya digunakan untuk: insert data, kirim form, login, register, dll.
+
+	✴️ headers: {"Content-Type": "application/json"}
+	➡️ Menandakan data yang dikirim ke server adalah JSON, bukan form biasa.
+	➡️ Server PHP harus tahu cara membaca JSON ini — nanti dijelaskan di bawah.
+
+	✴️ body: JSON.stringify(formData)
+	➡️ formData (objek JavaScript) diubah jadi string JSON, misalnya:
+	  { nama: "Yani", username: "yani123" }
+	➡️ menjadi
+	  {"nama":"Yani","username":"yani123"}
+	➡️ String ini dikirim di body permintaan HTTP POST.
+
+	📤 Jadi browser akan mengirim request ke simpan.php seperti:
+	POST /simpan.php
+	Content-Type: application/json
+	{"nama":"Yani","username":"yani123","password":"rahasia"}
+</details>
+<details><summary class="sub"><b>6. membaca balasan server ➡️ await res.json()</b>
+</summary><em><xmp class="kode">let data = await res.json();
+</xmp></em>	<b>Penjelasan :</b>
+	➡️ res (response) adalah hasil dari fetch() — semacam objek balasan dari server.
+	➡️ .json() membaca isi respons dan mengubahnya dari teks JSON ke objek JavaScript.
+
+	➡️ Misalnya PHP mengembalikan:
+	{"success": true, "message": "Data berhasil disimpan"}
+	➡️ maka variabel data akan berisi:
+	{ success: true, message: "Data berhasil disimpan" }
+	
+	<b style="color: red">Note :</b>
+	⚠️ Jika server tidak mengirim JSON valid, baris ini akan error.
+	Jadi di PHP harus echo json_encode($array); dan pastikan header-nya Content-Type: application/json.
+</details>
+<details><summary class="sub"><b>7. Menampilkan pesan ➡️ alert(data.message)</b>
+</summary><em><xmp class="kode">alert(data.message);
+</xmp></em>	<b>Penjelasan :</b>
+	➡️ Menampilkan pesan dari server ke pengguna.
+	➡️ Misalnya server kirim:{"success": true, "message": "Data tersimpan!"}
+	➡️ maka pengguna akan melihat: Data tersimpan!
+</details>	
+<details><summary class="sub"><b>8. Mengecek apakah berhasil ➡️ if(data.success)</b>
+</summary><em><xmp class="kode">if(data.success){ ... }
+</xmp></em>	<b>Penjelasan :</b>
+	➡️ Mengecek apakah server mengembalikan properti success bernilai true.
+	➡️ Kalau ya → berarti operasi berhasil, maka lanjut melakukan tindakan tambahan
+</details>
+<details><summary class="sub"><b>9. Mengosongkan ➡️ formform.reset()</b>
+</summary><em><xmp class="kode">form.reset();
+</xmp></em>	<b>Penjelasan :</b>
+	mengosongkan semua input di form
+</details>	
+<details><summary class="sub"><b>10. Memuat ulang daftar data ➡️ loadUsers()</b>
+</summary><em><xmp class="kode">loadUsers();
+</xmp></em>	<b>Penjelasan :</b>
+	memanggil fungsi lain untuk memuat ulang data pengguna (mungkin dari database)
+</details>
+
+	</div>
+</div>
+
+<!-- 1. koneksi-lokal.php  ( kode )--------------------------------------------------------------------------------->
+<div id="db" style="display:none">
+	<div class="mainheader">Tampilan Form Input HTML</div>
+<em><xmp class="kode">// Aktifkan error reporting supaya bisa lihat masalah
+	error_reporting(E_ALL);
+	ini_set('display_errors', 1);
+
+	$DB_HOST = "localhost";
+	$DB_NAME = "latihan";
+	$DB_USER = "root";
+	$DB_PASS = "";
+
+	$dsn = "mysql:host={$DB_HOST};dbname={$DB_NAME};charset=utf8mb4";
+	$options = [
+		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+	];
+
+	try {
+		$pdo = new PDO($dsn, $DB_USER, $DB_PASS, $options);
+		//echo 'Koneksi database berhasil!';
+	} catch (PDOException $e) {
+		echo 'Koneksi gagal: ' . $e->getMessage();
+	}</xmp></em>
+	<button onclick="showDetail('detail-db')">Lihat Detail penjelasan kode</button>
+	<button onclick="backToMenu('simpan')">Kembali</button>
+</div>	
+<!-- Detail Penjelasan Kode koneksi-lokal.php --------------------------------------------------------------------------------->
+<div id="detail-db" style="display:none">
+	<div class="penjelasan"><button onclick="backToMenu('db')">Kembali</button>
+	</div>
+</div>	
+<!-- 2. simpan_user.php  ( kode )--------------------------------------------------------------------------------->
+<div id="simpan_data" style="display:none">	
+	<div class="mainheader">(simpan_user.php) Kode Simpan.php kirim ke Database</div>
+<em><xmp class="kode">simpan_user.php
+header('Content-Type: application/json');
+require "db.php";
+
+// baca data JSON dari body
+$input = json_decode(file_get_contents("php://input"), true);
+
+// ambil variabel
+$nama     = trim($input["nama"] ?? "");
+$username = trim($input["username"] ?? "");
+$password = trim($input["password"] ?? "");
+$confirm  = trim($input["confirm_password"] ?? "");
+
+// Validasi
+if(!$nama || !$username || !$password){
+    echo json_encode(["success"=>false,"message"=>"Semua field wajib diisi"]);
+    exit;
+}
+// validasi sederhana
+if($password !== $confirm){
+    echo json_encode(["success"=>false,"message"=>"Password tidak sama"]);
+    exit;
+}
+
+// Cek username sudah ada atau belum
+$stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
+$stmt->execute([$username]);
+if($stmt->fetch()){
+    echo json_encode(["success"=>false,"message"=>"Username sudah digunakan"]);
+    exit;
+}
+// Hash password
+try {
+  $hash = password_hash($password, PASSWORD_DEFAULT);
+  $role = $role ?: 'user'; // default role
+
+// Simpan user baru
+  $stmt = $pdo->prepare("INSERT INTO users (nama, username, password) VALUES (?,?,?)");
+  $stmt->execute([$nama, $username, $hash]);
+
+  echo json_encode(["success" => true, "message" => "User berhasil ditambahkan"]);
+} catch (Exception $e) {
+  echo json_encode(["success" => false, "message" => "Terjadi kesalahan pada server"]);
+}</xmp></em>
+	<button onclick="showDetail('simpan-db')">Lihat Detail penjelasan kode</button>
+	<button onclick="backToMenu('simpan')">Kembali</button>
+</div>
+<!-- Detail Penjelasan Kode simpan.php --------------------------------------------------------------------------------->
+<div id="simpan-db" style="display:none">
+	<div class="mainheader">📚 Penjelasan Kode PHP</div>
+	<div class="penjelasan"><b style="color: red">🧠 9 Alur php terima data JSON dari JavaScript :</b>
+<details><summary class="sub"><b>1. Membaca data</b>
+</summary><em><xmp class="kode">file_get_contents("php://input")
+</xmp></em>	<b>Penjelasan :
+</b>	➡️ Ini membaca isi body request HTTP mentah — 
+	➡️ cocok untuk menerima JSON dari JavaScript fetch().
+	
+	<b style="color: red">Note Karena kamu di sisi JavaScript mengirim :</b>
+	<em style="color: blue">fetch("simpan.php", {
+		method: "POST",
+		headers: {"Content-Type": "application/json"},
+		body: JSON.stringify(formData)
+	});
+</em>	➡️ maka PHP tidak bisa membaca data dengan $_POST, sebab bukan form-urlencode.
+	➡️ Jadi harus pakai php://input untuk membaca seluruh isi body.	
+</details>
+<details><summary class="sub"><b>2. ubah jadi array</b>
+</summary><em><xmp class="kode">json_decode(..., true)
+</xmp></em>	<b>Penjelasan :</b> 
+	➡️ Mengubah string JSON menjadi array asosiatif PHP.
+	➡️ Argumen true membuat hasilnya array, bukan object.
+<b>Contoh : </b><em style="color: blue">{"nama":"Yani","username":"yani123","password":"rahasia"}</em>
+<b>akan menjadi : </b><em style="color: blue">[
+		  "nama" => "Yani",
+		  "username" => "yani123",
+		  "password" => "rahasia"
+		]</em>
+	➡️ Lalu disimpan ke variabel $input.
+</details>
+<details><summary class="sub"><b>3. ambil variabel</b>
+</summary><em><xmp class="kode">$nama     = trim($input["nama"] ?? "");
+$username = trim($input["username"] ?? "");
+$password = trim($input["password"] ?? "");
+$confirm  = trim($input["confirm_password"] ?? "");
+</xmp></em>	<b>Penjelasan :</b> 
+	➡️ Operator ?? (null coalescing) → kalau key tidak ada, isi dengan string kosong.
+	➡️ trim() menghapus spasi di awal & akhir input.
+	➡️ Jadi, variabel aman untuk diperiksa atau disimpan.
+	<b style="color: red">📌 Hasil contoh:</b>
+	<em style="color:blue">$nama = "Yani";
+	$username = "yani123";
+	$password = "rahasia";
+	$confirm = "rahasia";</em>
+</details>
+<details><summary class="sub"><b>4. Validasi pertama (semua field)</b>
+</summary><em><xmp class="kode">if(!$nama || !$username || !$password){
+    echo json_encode(["success"=>false,"message"=>"Semua field wajib diisi"]);
+    exit;
+}
+</xmp></em>	<b>Penjelasan :</b> 
+	➡️ Validasi pertama — semua wajib diisi
+	➡️ Mengecek apakah salah satu dari $nama, $username, atau $password kosong.
+	<em style="color: blue">!$nama artinya nilainya kosong ("").</em>
+	➡️ Kalau ada yang kosong, kirim respon JSON:
+	<em style="color: blue">{"success":false,"message":"Semua field wajib diisi"}</em>
+	➡️ exit; menghentikan script PHP langsung supaya tidak lanjut ke bawah.
+</details>
+<details><summary class="sub"><b>5. Validasi kedua (password)</b>
+</summary><em><xmp class="kode">if($password !== $confirm){
+    echo json_encode(["success"=>false,"message"=>"Password tidak sama"]);
+    exit;
+}
+</xmp></em><b>Penjelasan :</b> 
+	➡️ Validasi kedua — cek kesamaan password
+	➡️ Operator !== berarti tidak sama nilai maupun tipe.
+	➡️ Jadi kalau pengguna salah ketik konfirmasi password, server langsung tolak.
+	➡️ Hasil JSON-nya akan dikirim kembali ke browser → nanti ditampilkan lewat:
+	➡️ alert(data.message);
+</details>
+<details><summary class="sub"><b>6. Cek ke database apakah username sudah ada</b>
+</summary><em><xmp class="kode">$stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
+$stmt->execute([$username]);
+if($stmt->fetch()){
+    echo json_encode(["success"=>false,"message"=>"Username sudah digunakan"]);
+    exit;
+}
+</xmp></em>	<b>Penjelasan :</b> 
+	➡️ Cek apakah username sudah digunakan
+	<em style="color:blue">$pdo->prepare() membuat query SQL aman dari SQL Injection.</em>
+	➡️ Tanda ? adalah placeholder parameter.
+	<em style="color:blue">$stmt->execute([$username]) mengisi nilai parameter ? dengan isi $username.</em>
+	<em style="color:blue">$stmt->fetch() mengambil satu baris hasil query.</em>
+	➡️ Kalau ada data, berarti username sudah terdaftar.
+	➡️ Jika benar ada hasil:
+	➡️ Kirim JSON ke client:
+	<em style="color:blue">{"success":false,"message":"Username sudah digunakan"}</em>
+	➡️ exit; lagi untuk menghentikan eksekusi sebelum masuk proses penyimpanan.
+
+	<b style="color: red">Note :</b>
+	📋 Output yang diharapkan di sisi JavaScript
+	Kondisi	Balasan JSON	➡️ Pesan alert di browser
+	Ada field kosong	➡️ {"success":false,"message":"Semua field wajib diisi"}	➡️ Semua field wajib diisi
+	Password beda	➡️ {"success":false,"message":"Password tidak sama"}	➡️ Password tidak sama
+	Username sudah ➡️ ada	{"success":false,"message":"Username sudah digunakan"}	➡️ Username sudah digunakan
+	Lolos semua	➡️ (selanjutnya PHP akan kirim success:true, misal)	Data berhasil disimpan
+</details>
+<details><summary class="sub"><b>7. Membuat hash password</b>
+</summary><em><xmp class="kode">password_hash($password, PASSWORD_DEFAULT)
+</xmp></em>	<b>Penjelasan :</b> 
+	➡️ Membuat hash terenkripsi dari password asli sebelum disimpan ke database.
+	Contoh:
+	<em style="color:blue">$password = "rahasia123";
+	$hash = password_hash($password, PASSWORD_DEFAULT);</em>
+
+	Hasil $hash kira-kira seperti:
+	<em style="color:blue">$2y$10$BbbQ7Qth/g7QqOowuUMHmuY/4pYhAQ7fpkHZ6btv5K.z.VQjfxHSK</em>
+	<b style="color: red">Note :</b>
+	➡️ 💡 Kenapa tidak disimpan langsung password aslinya?
+	➡️ Karena alasan keamanan:
+	➡️ Kalau database bocor, password asli pengguna tidak terlihat.
+	➡️ Setiap kali pengguna login, kamu cukup memverifikasi pakai:
+	<em style="color:blue">password_verify($inputPassword, $hashDariDatabase);</em>
+
+	<b>🧠 Tentang PASSWORD_DEFAULT:</b>
+	➡️ Ini bukan algoritma tetap, tapi otomatis memilih algoritma terbaik yang aman untuk PHP versi itu 
+	  (biasanya bcrypt, atau nanti bisa argon2i/argon2id).
+	➡️ Artinya, kamu tidak perlu ganti kode kalau PHP update — otomatis aman.
+</details>
+<details><summary class="sub"><b>8. Menyimpan ke database</b>
+</summary><b>1. Menyiapkan perintah SQL aman</b>
+<em><xmp class="kode">$stmt = $pdo->prepare("INSERT INTO users (nama, username, password, role) VALUES (?,?,?,?)");
+</xmp></em>	<b>Penjelasan ✅ Fungsi:</b>	
+	➡️ Membuat query SQL dengan parameter placeholder (?).
+	<em style="color:blue">prepare()</em> mencegah SQL Injection, karena nilai akan diikat secara aman di langkah berikutnya (execute()).
+	<b>Kalimat SQL ini artinya:</b>
+	➡️ Masukkan data ke tabel users pada kolom nama, username, password, dan role.
+
+<b>2. Menjalankan query dengan data untuk menyimpan</b>
+<em><xmp class="kode">$stmt->execute([$nama, $username, $hash, $role]);
+</xmp></em>	<b>Penjelasan ✅ Fungsi:</b>
+	➡️ Mengisi placeholder ? di query dengan nilai dari array.
+	➡️ Urutan array harus sesuai urutan kolom di query.
+	➡️ <em style="color:blue">$hash</em> dikirim, bukan <em style="color:blue">$password</em>, agar password asli tidak tersimpan.
+	<b>Contoh konkret:</b>
+	<em style="color:blue">INSERT INTO users (nama, username, password, role)
+	VALUES ('Yani', 'yani123', '$2y$10$BbbQ7...', 'user')</em>
+</details>
+<details><summary class="sub"><b>9. Mengirim balasan ke client</b>
+</summary><em><xmp class="kode">echo json_encode(["success"=>true,"message"=>"User berhasil ditambahkan"]);
+</xmp></em>	<b>Penjelasan ✅ Fungsi :</b> 
+	➡️ Mengirim respons ke JavaScript di sisi klien dalam format JSON.
+	➡️ JavaScript di browser (pakai fetch) akan membaca ini lewat:
+	<em style="color:blue">let data = await res.json();
+	alert(data.message); // "User berhasil ditambahkan"</em>
+</details>
+<details><summary class="sub"><b>Keamanan dan catatan</b>
+</summary><b style="color:red">Note 🔐 Keamanan tambahan Risiko Solusi :</b>
+<em>Password bocor di database</em>	
+	Gunakan password_hash() (sudah kamu lakukan ✅)
+<em>SQL Injection</em>
+	Gunakan prepare + execute (sudah ✅)
+<em>User duplikat</em>
+	Sudah dicek sebelumnya ✅
+<em>Data kosong</em>
+	Sudah dicek sebelumnya ✅
+<em>Role dikirim dari frontend</em>
+	Sebaiknya batasi dari backend (misal default role "user"/"admin")
+<em>Error SQL	</em>
+	Gunakan try...catch untuk kirim pesan aman
+
+<b>Contoh tambahan yang lebih aman:</b>
+<em><xmp class="kode">try {
+  $hash = password_hash($password, PASSWORD_DEFAULT);
+  $role = $role ?: 'user'; // default role
+
+  $stmt = $pdo->prepare("INSERT INTO users (nama, username, password, role) VALUES (?,?,?,?)");
+  $stmt->execute([$nama, $username, $hash, $role]);
+
+  echo json_encode(["success" => true, "message" => "User berhasil ditambahkan"]);
+} catch (Exception $e) {
+  echo json_encode(["success" => false, "message" => "Terjadi kesalahan pada server"]);
+}
+</xmp></em><b>💬 Kesimpulan cepat</b>
+<em style="color: blue">$hash = password_hash(...)</em> ➡️ Enkripsi password
+<em style="color: blue">$pdo->prepare(...)</em> ➡️ Siapkan query aman
+<em style="color: blue">$stmt->execute([...])</em> ➡️ Jalankan query dengan data
+<em style="color: blue">echo json_encode(...)</em> ➡️ Kirim balasan ke client
+</details>
+	</div><button onclick="backToMenu('simpan_data')">Kembali</button>
+</div>
+<!-- 3. tabel_user.sql  ( kode )  ------------------------------------------------------------>
+<div id="tabel" style="display:none">
+	<div class="mainheader">3. tabel_user.sql</div>		
+	<em><xmp class="kode">-- tabel_user.sql nama DB latihan
+	CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nama VARCHAR(50) UNIQUE NOT NULL,
+	username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,   
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);</xmp></em>
+	<button onclick="showDetail('simpan-tabel')">Lihat Detail</button>
+	<button onclick="backToMenu('simpan')">Kembali</button>
+</div>
+<!-- Detail Penjelasan Kode tabel.sql ----------------------------------------------------------------->
+<div id="simpan-tabel" style="display:none">
+	<div class="mainheader">Detail Penjelasan Kode tabel.sql</div>
+	<div class="penjelasan"><p>INTEGER 
+PRIMARY KEY 
+AUTOINCREMENT, <em style="color: red">-- ID unik, otomatis bertambah</em>
+UNIQUE, <em style="color: red">-- kolom tidak boleh sama</em>
+TEXT, <em style="color: red">-- kolom email</em>
+TEXT NOT NULL <em style="color: red">-- wajib diisi</em>
+VARCHAR(50), <em style="color: red">-- teks max 50 karakter</em>
+TIMESTAMP DEFAULT CURRENT_TIMESTAMP</p>	
+	</div><button onclick="backToMenu('tabel')">Kembali</button> 
+</div>		
+
+ <!-- BACA / READ --------------------------------------------------------------------------------->
+<div id="baca" style="display:none">
+	<div class="mainheader">Proses Membaca dan Menampilkan data dari SERVER MYSQL ke Web</div>
+	<p class="penjelasan"><b style="color: red;">🧠 Alur proses menampilkan data :</b>
+<b class="konten" onclick="showDetail('indexBaca')">1. Proses index.html
+</b>➡️ menyiapkan elemen untuk menampilkan data dari server
+
+<b class="konten" onclick="showDetail('scriptBaca')">2. Proses script.js
+</b>➡️ untuk Memperbaharui Tabel di browser.
+➡️ ambil data JSON
+➡️ Menunggu hasilnya (berbentuk JSON)	
+➡️ Menampilkan datanya ke tabel HTML
+
+<b class="konten" onclick="showDetail('Baca_user')">3. baca_user.php
+</b>➡️ Mengambil data dari database (users)
+➡️ Mengubah hasil query ke bentuk JSON
+➡️ Mengirim balik ke JavaScript (echo json_encode([...]))
+	
+<button onclick="window.location.href='form_user/index.html'">LIHAT APLIKASI WEB</button>
+	</p> 
+</div>
+<!-- 1. indexBaca.html ( kode )  ------------------------------------------------------------>
+<div id="indexBaca" style="display:none">
+	<div class="mainheader">Tampilan data HTML<button onclick="backToMenu('baca')">Kembali</button></div>
+	<div class="penjelasan">
+	  <table id="userTable" border="1"><label><b>Daftar User</b></label>
+		<thead>
+		  <tr>
+			<th>ID</th>
+			<th>Nama</th>
+			<th>Username</th>
+			<th>Role</th>
+			<th>Tanggal Buat</th>
+		  </tr>
+		</thead>
+		<tbody></tbody>
+	  </table><br><br>
+	  <button onclick="showDetail('detailindexBaca')">Lihat Detail</button>
+	</div>
+</div>
+<!-- Detail Penjelasan Kode indexBaca.html  ------------------------------------------------------------>
+<div id="detailindexBaca" style="display:none">
+	<div class="mainheader">Kode Tampilan data HTML<button onclick="backToMenu('indexBaca')">Kembali</button></div>
+	<em><xmp class="kode"><b>Daftar User</b>
+	  <table id="userTable">
+		<thead>
+		  <tr>
+			<th>ID</th>
+			<th>Nama</th>
+			<th>Username</th>
+			<th>Role</th>
+			<th>Tanggal Buat</th>
+		  </tr>
+		</thead>
+		<tbody></tbody>
+	  </table></xmp></em>
+</div>
+<!-- 2. scriptBaca.js  ( kode )  ------------------------------------------------------------>
+<div id="scriptBaca" style="display:none">
+	<div class="mainheader">Kode scriptBaca.js<button onclick="backToMenu('baca')">Kembali</button></div>
+	<div class="penjelasan"><em><xmp class="kode">async function loadUsers(){
+      let res = await fetch("baca_user.php"); // 👉 minta data ke server
+	  let data = await res.json();        // 👉 terima hasil JSON
+      
+      let tbody = document.querySelector("#userTable tbody");
+      tbody.innerHTML = "";
+
+      if(data.success){
+        data.data.forEach(user => {
+          let row = `
+            <tr>
+              <td>${user.id}</td>
+              <td>${user.nama}</td>
+              <td>${user.username}</td>              
+              <td>${user.created_at}</td>
+            </tr>
+          `;
+          tbody.innerHTML += row;
+        });
+      }
+    }
+
+    loadUsers();
+</xmp></em>
+	<button onclick="showDetail('detail-scriptBaca')">Lihat Detail</button></div>
+	</div>
+<!-- Detail Penjelasan Kode baca_user.js ----------------------------------------------------------------->
+<div id="detail-scriptBaca" style="display:none">
+	<div class="mainheader">Detail Penjelasan Kode baca_user.js
+	<button onclick="backToMenu('scriptBaca')">Kembali</button></div>
+	<div class="penjelasan"><b style="color: red;">💡 Tujuan utama mengambil data dari server lalu menampilkan ke dalam tabel HTML.</b>
+<details><summary class="sub"><b>Kirim permintaan dan Ambil data</b>
+</summary><em><xmp class="kode">async function loadUsers() {...}
+</xmp></em>➡️ Membuat fungsi dengan asinkron  
+artinya di dalamnya kamu bisa pakai await untuk menunggu proses yang butuh waktu (seperti ambil data dari server).
+
+➡️ Perintah / kode di dalam async function loadUsers() { }
+<em><xmp class="kode">let res = await fetch("baca_user.php");
+</xmp></em>➡️ Mengirim permintaan HTTP ke file <em style="color: blue">baca_user.php</em> di server.
+➡️ <em style="color: blue">fetch()</em> menunggu balasan dari server (biasanya berupa JSON).
+➡️ <em style="color: blue">await</em> menunda eksekusi sampai hasilnya diterima.
+
+<em><xmp class="kode">let data = await res.json();
+</xmp></em>➡️ Mengubah hasil respon menjadi format JavaScript (bukan teks mentah).
+	<em style="color: blue">{
+	  "success": true,
+	  "data": [
+		{ "id": 1, "nama": "Siti", "username": "siti", "created_at": "2025-10-14" }
+	  ]
+	}</em>
+➡️ maka data jadi objek JavaScript:
+	data.success → true
+	data.data → array isi user
+
+<em><xmp class="kode">let tbody = document.querySelector("#userTable tbody");
+</xmp></em>➡️ Mencari <em style="color: blue">tbody</em> di tabel HTML (yang ID-nya userTable) dan 
+
+<em><xmp class="kode">tbody.innerHTML = ""; 
+</xmp></em>➡️ Mengosongkan data supaya tidak menumpuk dari pemanggilan sebelumnya.
+
+<em><xmp class="kode">if (data.success) {
+  data.data.forEach(user => {
+    let row = `
+      <tr>
+        <td>${user.id}</td>
+        <td>${user.nama}</td>
+        <td>${user.username}</td>
+        <td>${user.created_at}</td>
+      </tr>
+    `;
+    tbody.innerHTML += row;
+  });
+}
+</xmp></em>➡️ <em style="color: blue">if (data.success) {...}</em>Mengecek apakah hasil dari server sukses.
+➡️ Kalau ya, <em style="color: blue">data.data.forEach(...)</em> melakukan perulangan pada semua user dalam array data.data, lalu:
+➡️ <em style="color: blue">let row = `...`;</em> Menyusun baris <em style="color: blue">tr</em> baru untuk tiap user.
+➡️ <em style="color: blue">tbody.innerHTML += row;</em> Menambahkan data ke dalam isi tabel
+</details>
+<details><summary class="sub"><b>Menampilkan data</b>
+</summary><em><xmp class="kode">loadUsers();
+➡️  Menjalankan fungsi segera setelah halaman dibuka, supaya data langsung tampil otomatis.</xmp></em></details>
+	</div> 
+</div>
+<!-- 3.baca_user.php  ( kode )  ------------------------------------------------------------>
+<div id="Baca_user" style="display:none"><div class="mainheader">Kode baca_user.php
+	<button onclick="backToMenu('baca')">Kembali</button></div>
+	<div class="penjelasan"><em><xmp class="kode">header('Content-Type: application/json');
+	require "koneksi-lokal_user.php";
+	try {
+		$stmt = $pdo->query("SELECT id, nama, username, role, created_at 
+							 FROM users ORDER BY id DESC");
+		$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+		echo json_encode([
+			"success" => true,
+			"data" => $users
+		]);
+
+	} catch (Exception $e) {
+		echo json_encode([
+			"success" => false,
+			"message" => "Gagal mengambil data: " . $e->getMessage()
+		]);
+	}</xmp></em>
+	<button onclick="showDetail('detail-Baca_user')">Lihat Detail</button>	
+	</div>
+</div>
+<!-- Detail Penjelasan Kode baca_user.php ----------------------------------------------------------------->
+<div id="detail-Baca_user" style="display:none"><div class="mainheader">Detail Penjelasan Kode baca_user.php
+	<button onclick="backToMenu('Baca_user')">Kembali</button></div>
+	<div  class="penjelasan"><b style="color: red;">🧩 Penjelasan baris demi baris</b>
+<em><xmp class="kode">header('Content-Type: application/json');</xmp></em>
+<em><xmp class="kode">require "koneksi-lokal_user.php";</xmp></em>
+<details><summary class="sub"><b>1. error handling</b>
+</summary><em><xmp class="kode">try { ... } catch (Exception $e) { ... }
+</xmp></em>	<b style="color: red">Bagian ini disebut blok penanganan kesalahan (error handling).</b>
+	➡️ <em style="color: blue">try { ... } = </em>di sini kamu menulis kode yang berpotensi menimbulkan error.
+	➡️ <em style="color: blue">catch (Exception $e) = </em>jika ada error di dalam blok try, PHP akan menangkapnya dan menjalankan bagian ini.
+	➡️ <em style="color: blue">$e </em>adalah objek error yang berisi detail kesalahan.
+	<b>👉 Jadi, kalau query database gagal, script tidak langsung crash, 
+	tapi akan menampilkan pesan error yang rapi dalam format JSON.</b>
+</details>
+<details><summary class="sub"><b>2. menjalankan perintah SQL</b>
+</summary><em><xmp class="kode">	$stmt = $pdo->query(
+	"SELECT id, nama, username, role, 
+	created_at FROM users ORDER BY id DESC");
+</xmp></em>	➡️ <em style="color: blue">$pdo = </em>objek koneksi database (dari new PDO(...) sebelumnya).
+	➡️ <em style="color: blue">->query(...) = </em>menjalankan perintah SQL langsung tanpa parameter.
+	<b>SQL-nya :</b>
+	➡️ <em style="color: blue">SELECT id, nama, username, role, created_at </em>Ambil kolom id, nama, username, role, created_at
+	➡️ <em style="color: blue">FROM users </em>Dari tabel users
+	➡️ <em style="color: blue">ORDER BY id DESC </em>Urutkan hasilnya dari ID terbesar ke terkecil (DESC)
+	➡️ Hasilnya disimpan dalam variabel <em style="color: blue">$stmt</em> (objek PDOStatement).
+</details>
+<details><summary class="sub"><b>3. Ambil database SQL</b>
+</summary><em><xmp class="kode">$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+</xmp></em>	➡️ <em style="color: blue">fetchAll() = </em>ambil semua baris hasil query ke dalam array.
+	➡️ <em style="color: blue">PDO::FETCH_ASSOC = </em>hasilnya dikembalikan sebagai array asosiatif, 
+	<b>Contohnya:</b>
+	➡️ <em style="color: blue">[
+	  ["id" => 3, "nama" => "Siti", "username" => "siti123", "role" => "admin"],
+	  ["id" => 2, "nama" => "Budi", "username" => "budi", "role" => "user"],
+	  ...
+	]</em>
+</details>
+<details><summary class="sub"><b>4. Ubah array PHP menjadi format JSON</b>
+</summary><em><xmp class="kode">echo json_encode([
+        "success" => true,
+        "data" => $users
+    ]);
+</xmp></em>	➡️ <em style="color: blue">echo json_encode([...]); </em>ubah array PHP menjadi format JSON agar bisa dibaca 
+	oleh JavaScript (biasanya AJAX atau Fetch API di frontend).
+	<b>Jika query berhasil, akan mengirim data seperti ini:</b>
+	➡️ <em style="color: blue">"success": true,</em>
+	➡️ <em style="color: blue">"data": [
+		{ "id": 3, "nama": "Siti", "username": "siti123", "role": "admin", "created_at": "2025-10-14 19:00:00" },
+		{ "id": 2, "nama": "Budi", "username": "budi", "role": "user", "created_at": "2025-10-12 18:00:00" }
+		]</em>
+</details>
+<details><summary class="sub"><b>5. Tangkap pesan jika terjadi eror</b>
+</summary><em><xmp class="kode">catch (Exception $e) {
+		echo json_encode([
+			"success" => false,
+			"message" => "Gagal mengambil data: " . $e->getMessage()
+		]);
+	}
+</xmp></em>	➡️ <em style="color: blue">catch (Exception $e) { ... } </em>
+	Jika terjadi error (misalnya koneksi ke database gagal atau tabel tidak ada), maka:
+	➡️ <em style="color: blue">echo json_encode([...]);</em>
+	➡️ <em style="color: blue">"success" => false,</em>
+	➡️ <em style="color: blue">"message" => "Gagal mengambil data: " . $e->getMessage()</em>
+	<b>Akan menghasilkan JSON seperti ini:</b>
+	➡️ <em style="color: blue">	{
+	"success": false,
+	"message": "Gagal mengambil data: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'db.users' doesn't exist"
+	}</em>
+</details>
+<details><summary class="sub"><b>🧩 Apa itu Exception?</b>
+</summary>Exception adalah kelas bawaan PHP yang digunakan untuk mewakili kesalahan (error) yang terjadi saat program dijalankan.
+Bayangkan begini:
+Saat ada error di dalam blok try { ... }, PHP akan “melempar” (throw) sebuah Exception.
+Misalnya koneksi database gagal, query salah, atau file tidak ditemukan.
+🧱 2. Fungsi catch (Exception $e)
+Bagian catch ini akan menangkap error yang dilempar dari blok try.
+
+Strukturnya:
+catch (TipeException $variabel) { ... }
+
+TipeException → Jenis error yang mau ditangkap.
+Di sini Exception berarti semua jenis error umum (bisa kamu ganti jadi PDOException jika hanya mau tangkap error dari PDO).
+$e → variabel penampung object error.
+🧠 3. Jadi, apakah $e itu variabel?
+✅ Ya, $e adalah variabel.
+
+Tapi bukan variabel biasa — dia adalah objek dari kelas Exception.
+Artinya $e punya method (fungsi) dan property (nilai) bawaan.
+Contohnya:
+Method	Fungsi
+$e->getMessage()	Ambil pesan error
+$e->getCode()	Ambil kode error
+$e->getFile()	File tempat error terjadi
+$e->getLine()	Baris tempat error muncul
+$e->getTraceAsString()	Lihat jejak (trace) error
+💡 Contoh:
+try {
+    $pdo = new PDO("mysql:host=localhost;dbname=salah", "root", "");
+} catch (Exception $e) {
+    echo "Terjadi error: " . $e->getMessage();
+}
+
+
+Jika database salah tidak ada, hasilnya bisa seperti:
+Terjadi error: SQLSTATE[HY000] [1049] Unknown database 'salah'
+
+🧠 Kesimpulan:
+Elemen	Penjelasan
+Exception	Kelas bawaan PHP untuk error
+$e	Variabel (objek) yang berisi detail error
+catch	Bagian yang menangani error dari try
+$e->getMessage()	Cara menampilkan pesan error-nya
+
+🧠 Kesimpulan
+Kode ini melakukan:
+Mengambil semua data user dari database (SELECT ... FROM users).
+Mengonversi hasilnya ke JSON.
+Mengirimkan hasilnya ke frontend dengan status sukses atau gagal.
+</details>
+	</div> 
+</div>
+
+<!-- EDIT / UPDATE --------------------------------------------------------------------------------->
+<div id="edit" style="display:none"><div class="mainheader">PROSES EDIT / UPDATE DATA</div>
+	<div class="penjelasan"><b style="color: red;">🧠 Alur proses EDIT data :</b>	
+		<b>FRONTEND</b>
+		<div class="konten" onclick="showDetail('indexedit')"><b>1. indexedit.html</b></div>
+		<div class="konten" onclick="showDetail('scriptedit')"><b>2. edit_script.js</b></div>
+
+		<b>BACKEND</b>
+		<div class="konten" onclick="showDetail('phpedit')"><b>2. edit_user.php</b></div>
+		<b>Proses edit dari WEB-JS-PHP-SERVER MYSQL</b>
+	</div>
+</div>
+<!-- 1. indexedit.html  ( kode )  ------------------------------------------------------------>
+<div id="indexedit" style="display:none"><div class="mainheader">KODE EDIT HTML DENGAN MODAL
+	<button onclick="backToMenu('edit')">Kembali</button></div>
+	<div class="penjelasan">
+	<fieldset><form><label><b>Form Tambah User	</b></label>
+	<label>Nama 		</label>:<input type="text" required>    
+	<label>Username 	</label>:<input type="text" required>    
+	<label>Password 	</label>:<input type="password" required>    
+	<label>Konf. Pass. 	</label>:<input type="password" required>	<button type="submit">Simpan Perubahan</button>
+	</form><button class="close-btn" onclick="closeModal()">Tutup Modal</button></fieldset>
+	
+<br><button onclick="showDetail('detailindexedit')">LIHAT KODE</button>
+	</div>
+</div>
+<!-- Detail Penjelasan Kode indexedit.html ----------------------------------------------------------------->
+<div id="detailindexedit" style="display:none"><div class="mainheader">DETAIL PENJELASAN KODE EDIT HTML DENGAN MODAL
+	<button onclick="backToMenu('indexedit')">Kembali</button></div>
+	<div class="penjelasan">
+<em><xmp class="kode">  <div class="modal-overlay" id="myModal" style="display:none;">
+    <div class="modal-box">
+      <div class="modal-header">Edit User</div>
+      <div class="modal-main">
+        <form id="formedit">
+          <input type="hidden" id="edituserId">
+          <label>Nama</label><input type="text" id="editnama" required>
+          <label>Username</label><input type="text" id="editusername" required>
+          <label>Password</label><input type="password" id="editpassword">
+          <label>Konfirmasi Password</label><input type="password" id="editconfirm_password">
+          <button type="submit">Simpan Perubahan</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="close-btn" onclick="closeModal()">Tutup Modal</button>
+      </div>
+    </div>
+  </div></xmp></em>
+  <button onclick="showDetail('detailindexedit')">DETAIL PENJELASAN KODE</button>
+	</div>
+</div>
+<!-- 2. edit_script.js  ( kode )  ------------------------------------------------------------>
+<div id="scriptedit" style="display:none"><div class="mainheader">KODE EDIT JAVASCRIPT
+	<button onclick="backToMenu('edit')">Kembali</button></div>
+	<div class="penjelasan">
+	<em><xmp class="kode">  const formedit = document.getElementById("formedit"); // cek aktifitas formedit
+
+  // buka modal edit user
+  function openModal() {
+    document.getElementById("myModal").style.display = "block";
+  }
+  
+  // buka modal edit user
+  function closeModal() {
+    document.getElementById("myModal").style.display = "none";
+  }
+
+  // fungsi showEdit - isi datanya - buka modal (perintah saat klik edit dalam form edit)
+  function showEdit(id, nama, username){
+    document.getElementById("edituserId").value = id; //ambil elememt "edituserId" isi data id dr database
+    document.getElementById("editnama").value = nama;
+    document.getElementById("editusername").value = username;
+    document.getElementById("editpassword").value = "";
+    document.getElementById("editconfirm_password").value = "";
+    openModal();
+  }  
+  
+  // even klik submit-ambil data-kirim ke php-terima hasil-tutup modal-tampilkan data
+  formedit.addEventListener("submit", async function(e){
+    e.preventDefault();
+	
+    const data = {
+      id: document.getElementById("edituserId").value,
+      nama: document.getElementById("editnama").value,
+      username: document.getElementById("editusername").value,
+      password: document.getElementById("editpassword").value,
+      confirm_password: document.getElementById("editconfirm_password").value
+    };
+    let res = await fetch("edit_user.php", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(data)
+    });
+    let hasil = await res.json();
+    alert(hasil.message);
+    if(hasil.success){ closeModal(); loadUsers(); }
+  });		
+	</xmp></em>
+	<button onclick="showDetail('detailscriptedit')">DETAIL PENJELASAN KODE</button>
+	</div>
+</div>
+<!-- 3. edit_user.php  ( kode )  ------------------------------------------------------------>
+<div id="phpedit" style="display:none"><div class="mainheader">KODE edit_user.php
+	<button onclick="backToMenu('edit')">Kembali</button></div>
+	<div class="penjelasan"><em><xmp class="kode">edit_user.php
+header('Content-Type: application/json');
+require "koneksi-lokal_user.php";
+
+// Ambil data JSON yang dikirim dari frontend (biasanya via fetch atau AJAX)
+$input = json_decode(file_get_contents("php://input"), true);
+
+// Ambil nilai dari array $input, jika tidak ada maka isi dengan string kosong.
+// trim() digunakan untuk menghapus spasi di awal dan akhir teks.
+$id       = $input["id"] ?? "";
+$nama     = trim($input["nama"] ?? "");
+$username = trim($input["username"] ?? "");
+$password = trim($input["password"] ?? "");
+$confirm  = trim($input["confirm_password"] ?? "");
+
+// Validasi data wajib — pastikan id, nama, dan username tidak kosong.
+if(!$id || !$nama || !$username){
+    echo json_encode([
+        "success" => false,
+        "message" => "Data tidak lengkap"
+    ]);
+    exit; // hentikan program di sini
+}
+
+try {
+    // Jika user mengisi password baru
+    if($password){
+        // Pastikan password dan konfirmasi sama
+        if($password !== $confirm){
+            echo json_encode([
+                "success" => false,
+                "message" => "Password tidak sama"
+            ]);
+            exit;
+        }
+
+        // Enkripsi password sebelum disimpan (keamanan)
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+
+        // Siapkan query update lengkap (termasuk password)
+        $stmt = $pdo->prepare("
+            UPDATE users 
+            SET nama = ?, username = ?, password = ?
+            WHERE id = ?
+        ");
+
+        // Jalankan query dengan data yang sesuai urutan tanda tanya (?)
+        $stmt->execute([$nama, $username, $hash, $id]);
+
+    } else {
+        // Jika tidak mengganti password, update hanya nama & username
+        $stmt = $pdo->prepare("
+            UPDATE users 
+            SET nama = ?, username = ?
+            WHERE id = ?
+        ");
+
+        $stmt->execute([$nama, $username, $id]);
+    }
+
+    // Jika semua berhasil tanpa error, kirim respon sukses ke frontend
+    echo json_encode([
+        "success" => true,
+        "message" => "User berhasil diupdate"
+    ]);
+
+} catch (Exception $e) {
+    // Jika terjadi error (misal koneksi DB, query gagal, dsb)
+    echo json_encode([
+        "success" => false,
+        "message" => "Gagal update: " . $e->getMessage()
+    ]);
+}</xmp></em>
+<button onclick="showDetail('detailphpedit')">DETAIL PENJELASAN KODE</button>
+	</div>
+</div>
+<!-- Detail Penjelasan edit_user.php ----------------------------------------------------------------->
+
+<!-- HTML --------------------------------------------------------------------------------->
+<div id="html" style="display:none">
+<div class="mainheader">DAFTAR TAG HTML</div>
+<section class="penjelasan"><b style="color: red;">🧠 Alur proses penyimpanan Web-base:</b>
+<button onclick="loadFile('materi/html/tagHTML.html', '#doc')">Dokumen</button>
+
+<button onclick="loadFile('materi/html/tagHTML.html', '#text')">text</button>
+/cara_buat_webbase/materi/html/html.html
+<b class="konten" onclick="showDetail('index')">Proses HTML : <em>index.html</em>
+</b>1. User isi form
+2. klik Submit
+
+<b class="konten" onclick="showDetail('script')">Proses Javascript : <em>script.js</em>
+</b>
+
+</section>
+</div>
+
+<div id="tag" style="display:none">
+<div class="mainheader">DAFTAR TAG HTML</div>
+
+<section class="penjelasan">
+<div class="konten" onclick="loadFile('materi/html/tagHTML.html', '#doc')"><b>1. Tag Dokumen</b></div>
+<div class="konten" onclick="loadFile('materi/html/tagHTML.html', '#text')"><b>2. Tag text</b></div>
+<div class="konten" onclick="loadFile('materi/html/html.html', '#input')"><b>type input</b></div>
+<div class="konten" onclick="loadFile('materi/html/html.html', '#inputText')"><b>type input</b></div>
+</section>
+</div>
+
+<!-- PHP --------------------------------------------------------------------------------->	
+	<div id="php" style="display:none">
+<details><summary class="judul"><b>PDO (PHP Data Objects)</b></summary>
+<div class="penjelasan"><b>🧩 Apa itu PDO?</b>
+PDO (PHP Data Objects) adalah library bawaan PHP untuk menghubungkan dan berinteraksi dengan database.
+
+<b>➡️ Singkatnya:</b>
+PDO = “jembatan universal” antara PHP dan berbagai database 
+(MySQL, PostgreSQL, SQLite, SQL Server, Oracle, dll).
+
+Sebelum ada PDO, PHP punya dua cara:
+1. mysql_* (sudah dihapus di PHP 7)
+2. mysqli_* (khusus untuk MySQL saja)
+
+<b>Contoh cara lama:</b>
+<em><xmp class="kode">$conn = mysqli_connect("localhost", "root", "", "dbku");
+$result = mysqli_query($conn, "SELECT * FROM users");</xmp></em>
+<b style="color:red">Masalahnya:</b>
+Hanya bisa MySQL
+Rentan terhadap SQL Injection
+Sulit dipindah ke DB lain
+
+<b>🟢 Cara modern (pakai PDO)</b>
+<em><xmp class="kode">$pdo = new PDO("mysql:host=localhost;dbname=dbku;charset=utf8mb4", "root", "");
+$stmt = $pdo->query("SELECT * FROM users");
+$data = $stmt->fetchAll(PDO::FETCH_ASSOC);</xmp></em>
+<b>Kelebihannya:</b>
+✅ Aman (mendukung prepared statement)
+✅ Bisa digunakan untuk semua database
+✅ Kode lebih rapi dan fleksibel
+✅ Mudah pindah DB (ganti DSN saja)
+</div></details>
+    <button onclick="showDetail('detail-php')">Lihat Detail</button>
+	</div> 	
+<!-- DETAIL PHP --------------------------------------------------------------------------------->	
+	<div id="detail-php"  style="display:none"><button onclick="backToMenu('php')">Kembali</button>
+<details><summary class="judul"><b>🧠 Konsep dasar PDO</b></summary>
+<div class="penjelasan"><b>PDO bekerja dalam 3 langkah utama:</b>
+Membuat koneksi ke database
+Menyiapkan perintah SQL (prepare)
+Menjalankan dan mengambil hasil (execute & fetch)
+<b>1️. Membuat koneksi (Objek PDO)</b>
+<em><xmp class="kode">$dsn = "mysql:host=localhost;dbname=dbku;charset=utf8mb4";
+$user = "root";
+$pass = "";
+$pdo = new PDO($dsn, $user, $pass);</xmp></em>
+
+<b>DSN (Data Source Name)</b>
+<b>Formatnya:</b><em><xmp class="kode">driver:host=HOST;dbname=NAMA_DB;charset=UTF8</xmp></em>
+<b>Contoh untuk database lain:</b>
+<em><xmp class="kode">PostgreSQL: pgsql:host=localhost;port=5432;dbname=dbku
+SQLite: sqlite:database.db</xmp></em>
+
+<b>2️. Menyiapkan query (prepare)</b>
+Daripada langsung menulis query dengan nilai mentah, PDO memungkinkan kita menyiapkan template query:
+<em><xmp class="kode">$stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");</xmp></em>
+Simbol ? disebut placeholder → tempat nilai dimasukkan nanti.
+
+<b>3️. Menjalankan query (execute)</b>
+<em><xmp class="kode">$stmt->execute([$username]);</xmp></em>
+PDO otomatis:
+Melindungi dari SQL Injection
+Menyesuaikan tipe data dengan aman
+
+<b>4️. Mengambil hasil (fetch / fetchAll)</b>
+<em><xmp class="kode">$user = $stmt->fetch(PDO::FETCH_ASSOC);</xmp></em>
+fetch() → ambil 1 baris
+fetchAll() → ambil semua baris
+
+<b>🧱 Menyisipkan data (INSERT)</b>
+<em><xmp class="kode">$stmt = $pdo->prepare("INSERT INTO users (nama, username, password) VALUES (?, ?, ?)");
+$stmt->execute([$nama, $username, $password]);</xmp></em>
+🔒 Keamanan: Prepared Statement
+Prepared statement = cara aman untuk mengeksekusi query dengan input user.
+
+Tanpa PDO:
+<em><xmp class="kode">$query = "SELECT * FROM users WHERE username='$username'"; // ⚠️ bisa di-hack</xmp></em>
+Dengan PDO:
+<em><xmp class="kode">$stmt = $pdo->prepare("SELECT * FROM users WHERE username=?");
+$stmt->execute([$username]); // ✅ aman dari injection</xmp></em>
+</div></details>
+<details><summary class="judul"><b>🧩 Contoh lengkap CRUD sederhana dengan PDO</b></summary>
+<div class="penjelasan">
+<em><xmp class="kode">// koneksi
+$pdo = new PDO("mysql:host=localhost;dbname=crud;charset=utf8mb4", "root", "");
+
+// CREATE
+$stmt = $pdo->prepare("INSERT INTO users (nama, email) VALUES (?, ?)");
+$stmt->execute(["Yani", "yani@gmail.com"]);
+
+// READ
+$stmt = $pdo->query("SELECT * FROM users");
+$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// UPDATE
+$stmt = $pdo->prepare("UPDATE users SET email=? WHERE id=?");
+$stmt->execute(["baru@gmail.com", 1]);
+
+// DELETE
+$stmt = $pdo->prepare("DELETE FROM users WHERE id=?");
+$stmt->execute([1]);</xmp></em>
+</div></details>
+<details><summary class="judul"><b>⚙️ Mode error handling</b></summary>
+<b>Tambahkan ini setelah koneksi:</b>
+<em><xmp class="kode">$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+Fungsinya: setiap error database akan memunculkan Exception, bisa ditangkap dengan try...catch.</xmp></em>
+<em><xmp class="kode">try {
+  $pdo = new PDO($dsn, $user, $pass);
+  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+  echo "Koneksi gagal: " . $e->getMessage();}</xmp></em>
+<b style="color:red">🧩 Kenapa wajib belajar PDO?</b>
+Fitur	MySQLi	PDO
+Hanya MySQL	✅	❌
+Semua DB (MySQL, SQLite, PostgreSQL, dll)	❌	✅
+Prepared Statement	✅	✅
+Transaksi	✅	✅
+OOP support	✅	✅
+Portable (mudah pindah DB)	❌	✅
+<b>📦 Ringkasan cepat</b>
+new PDO()		➡️ Membuat koneksi
+prepare()		➡️ Menyiapkan query aman
+execute()		➡️ Menjalankan query
+fetch() / fetchAll()	➡️ Ambil hasil
+beginTransaction() / commit() / rollback()	➡️ Transaksi data
+setAttribute()	➡️ Atur mode koneksi / error
+lastInsertId()	➡️ Dapatkan ID terakhir dari AUTO_INCREMENT
+</details>
+<details><summary class="judul"><b>Jenis fungsi-fungsi PDO</b></summary>
+<details><summary class="sub"><b>prepare()</summary>
+<div class="penjelasan"><b>✅ Fungsi : </b> 
+Menyiapkan statement SQL dengan placeholder (parameter) untuk dieksekusi nanti.
+Mengembalikan: objek PDOStatement.
+<b>Kapan pakai: </b> 
+saat ada nilai dari user → mencegah SQL injection, 
+atau kalau ingin eksekusi berulang dengan parameter berbeda.
+
+<b>Contoh:</b> 
+<em><xmp class="kode">$stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
+$stmt->execute([$username]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+Catatan: Bisa pakai ? (positional) atau :name (named parameter). Contoh named:
+$stmt = $pdo->prepare("INSERT INTO users (nama, username) VALUES (:nama, :username)");
+$stmt->execute([':nama'=>$nama, ':username'=>$username]);</xmp></em>
+<b>Penjelasan ✅ Fungsi :</b> 
+	➡️ Mengirim respons ke JavaScript di sisi klien dalam format JSON.
+<em><xmp class="kode"></xmp></em>
+</div></details>
+<details><summary class="sub"><b>query()</summary>
+<div class="penjelasan">Apa: Menjalankan SQL langsung dan mengembalikan PDOStatement.
+Mengembalikan: PDOStatement untuk SELECT; untuk non-SELECT, biasanya masih mengembalikan statement, tapi exec() lebih cocok.
+Kapan pakai: cepat dan cocok untuk query static (tidak ada input user) seperti SELECT * FROM countries atau CREATE TABLE.
+
+<b>Contoh:</b>
+<em><xmp class="kode">$stmt = $pdo->query("SELECT * FROM products");
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);</xmp></em>
+<b style="color:red">Catatan:</b> 
+Jangan gunakan query() untuk input user tanpa sanitasi — rentan SQL injection.
+</div> </details>
+<details><summary class="sub"><b>exec()</b></summary>
+<div class="penjelasan"><b>Apa:</b> Menjalankan SQL yang tidak mengembalikan hasil (INSERT, UPDATE, DELETE, DDL).
+<b>Mengembalikan:</b> jumlah baris yang terpengaruh (integer) atau false jika gagal.
+<b>Kapan pakai:</b> saat kamu hanya butuh hitung baris yang diubah dan tidak butuh PDOStatement.
+
+<b>Contoh:</b>
+<xmp class="kode">$count = $pdo->exec("DELETE FROM logs WHERE created_at < '2024-01-01'");
+echo "$count rows deleted";></xmp></em>
+<b style="color:red">Catatan:</b>  
+- exec() tidak menerima parameter binding 
+— kalau ada input user, gunakan prepare().
+</div> </details>
+<details><summary class="sub"><b>beginTransaction(), commit(), rollback()</b></summary>
+<div class="penjelasan"><b>Apa:</b> Mengatur transaksi database (atomic operations).
+
+<b>Fungsinya:</b>
+beginTransaction() — mulai transaksi.
+commit() — konfirmasi semua perubahan.
+rollback() — batalkan semua perubahan selama transaksi.
+Kapan pakai: saat melakukan beberapa query yang harus either all succeed atau all fail (transfer dana, insert master-detail, dsb).
+
+<b>Contoh:</b>
+<em><xmp class="kode">try {
+  $pdo->beginTransaction();
+
+  $stmt1 = $pdo->prepare("INSERT INTO orders (...) VALUES (...)");
+  $stmt1->execute([...]);
+
+  $stmt2 = $pdo->prepare("INSERT INTO order_items (...) VALUES (...)");
+  $stmt2->execute([...]);
+
+  $pdo->commit();
+} catch (Exception $e) {
+  $pdo->rollback();
+  // tangani error
+}</xmp></em>
+<b style="color:red">Catatan:</b> Pastikan DB engine support transaksi (InnoDB untuk MySQL).
+</div> </details>
+<details><summary class="sub"><b>execute()</b></summary>
+<div class="penjelasan">Apa: Method pada objek PDOStatement hasil prepare() untuk mengeksekusi statement.
+Kembaliannya: true/false.
+Kapan pakai: setelah prepare(). Bisa kirim nilai parameter sebagai array ke execute() atau bind satu-satu dulu.
+
+Contoh:
+<em><xmp class="kode">$stmt = $pdo->prepare("UPDATE users SET name=? WHERE id=?");$stmt->execute([$name, $id]);</xmp></em>
+</div> </details>
+<details><summary class="sub"><b>bindParam() vs bindValue()</b></summary>
+<div class="penjelasan">bindParam(name, var, type) — mengikat variabel; nilai diambil saat execute() dieksekusi (berguna kalau variabel berubah sebelum execute).
+bindValue(name, value, type) — mengikat nilai langsung.
+
+<b>Contoh:</b>
+<em><xmp class="kode">$stmt = $pdo->prepare("INSERT INTO t (a,b) VALUES (:a,:b)");
+$stmt->bindValue(':a', 123, PDO::PARAM_INT);
+$stmt->bindParam(':b', $varB, PDO::PARAM_STR);
+$varB = 'halo';
+$stmt->execute();</xmp></em>
+</div> </details>
+<details><summary class="sub"><b>fetch(), fetchAll(), rowCount(), lastInsertId()</b></summary>
+<div class="penjelasan">fetch() — ambil satu baris dari result set (PDO::FETCH_ASSOC, PDO::FETCH_OBJ, dll).
+fetchAll() — ambil semua baris sekaligus (waspadai memori untuk result besar).
+rowCount() — untuk banyak DB, mengembalikan jumlah baris yang terpengaruh oleh last DELETE/UPDATE/INSERT; untuk SELECT, hasilnya tidak selalu di-support (bisa 0 atau bergantung driver).
+lastInsertId() — id autoincrement terakhir yang dimasukkan (string).
+
+<b>Contoh:</b>
+<em><xmp class="kode">$stmt = $pdo->query("SELECT * FROM users");
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { ... }
+$all = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$pdo->lastInsertId();</xmp></em>
+</div> </details>
+<details><summary class="sub"><b>setAttribute()</b></summary>
+<div class="penjelasan"><b>Apa:</b> Mengatur atribut koneksi PDO.
+
+<b>Contoh penting:</b>
+<em><xmp class="kode">$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);</xmp></em>
+<b>Gunanya:</b> mengubah perilaku error handling dan fetch default.
+</div> </details>
+<details><summary class="sub"><b style="color:red">Performance & best practice singkat</b></summary>
+<div class="penjelasan">Gunakan prepare() + execute() untuk input user.
+Untuk banyak insert berulang, gunakan transaksi + prepared statement untuk jauh lebih cepat.
+Hindari fetchAll() untuk dataset besar — iterasi fetch() lebih ramah memori.
+Set PDO::ATTR_EMULATE_PREPARES sesuai kebutuhan (kadang matikan untuk keamanan/performance driver tertentu).
+Selalu tangani exception dan jangan tampilkan pesan error SQL mentah ke user.
+
+Ringkasan cepat (ketika pilih)
+prepare() → buat statement aman (pakai placeholder).
+execute() → jalankan statement hasil prepare().
+query() → jalankan SQL langsung (untuk query statis).
+exec() → jalankan SQL yang tidak menghasilkan rowset, kembalikan jumlah baris.
+beginTransaction()/commit()/rollback() → kontrol transaksi.
+fetch()/fetchAll() → ambil hasil query.
+bindParam()/bindValue() → ikat parameter sebelum execute.
+setAttribute() & try/catch → atur mode error dan tangani dengan aman.
+</div> </details>
+</details>
+	</div> 
+<!-- Akhir Template konten tersembunyi ----------------------------------------------------------------------------------->
+</div>
+</div>
+</div>
+
+<script>
+// Menu sidebar
+let activeMenu = null;
+let sidebarVisible = true;
+
+function toggleSidebar(){
+  const sidebar = document.getElementById('sidebar');
+  sidebarVisible = !sidebarVisible;
+  sidebar.classList.toggle('hidden', !sidebarVisible);
+  document.body.classList.toggle('sidebar-hidden', !sidebarVisible);
+  document.body.classList.toggle('sidebar-shown', sidebarVisible);
+}
+// Menampilkan menu konten berdasarkan id ke main	
+function showContent(id, el){ //<div class="menu-item" onclick="showContent('simpan', this)"><b>SIMPAN/CREAT</b></div>
+  const main = document.getElementById('main');
+  // jika klik menu sama dua kali -> kembali ke main
+  if (activeMenu === el){ 
+	main.innerHTML = document.getElementById('dasar')?.innerHTML;    
+    el.classList.remove('active');
+    activeMenu = null;
+    return;
+  }
+
+  document.querySelectorAll('.menu-item').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');
+  activeMenu = el;
+
+  const html = document.getElementById(id)?.innerHTML || "<p>Konten tidak ditemukan.</p>";
+  main.innerHTML = html;
+
+  if(window.innerWidth < 768) toggleSidebar();
+  }
+
+</script>
+<script src="asset/script.js"></script>
+</body>
+</html>
