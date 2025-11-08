@@ -1,0 +1,238 @@
+/*<link rel="stylesheet" href="assets/css/custom.css">*/
+
+:root {
+  --blue:#007bff;
+  --indigo:#6610f2;
+  --purple:#6f42c1;
+  --pink:#e83e8c;
+  --red:#dc3545;
+  --orange:#fd7e14;
+  --yellow:#ffc107;
+  --green:#28a745;
+  --teal:#20c997;
+  --cyan:#17a2b8;
+  --white:#fff;
+  --gray:#6c757d;
+  --gray-dark:#343a40;
+  --primary:#007bff;
+  --secondary:#6c757d;
+  --success:#28a745;
+  --info:#17a2b8;
+  --warning:#ffc107;
+  --danger:#dc3545;
+  --light:#f8f9fa;
+  --dark:#343a40;
+  --breakpoint-xs:0;
+  --breakpoint-sm:576px;
+  --breakpoint-md:768px;
+  --breakpoint-lg:992px;
+  --breakpoint-xl:1200px;
+  --font-family-sans-serif:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  --font-family-monospace:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+}
+
+  body {
+    margin: 0;
+    font-family: arial, sans-serif;	
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+    
+  /* sidebar */
+  #sidebar {
+    width: 200px;
+    background: #2c3e50;
+	border: 2px solid white;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+	overflow-y: auto;
+    transform: translateX(0);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+  }
+  #sidebar.hidden {
+    transform: translateX(-100%);
+  }
+
+  /* tombol toggle */
+#toggleBtn {
+  position: fixed;
+  top: 1px;
+  left: 20px;
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 10px;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  z-index: 900; /* lebih rendah dari sidebar */
+  transition: opacity 0.3s ease;
+}
+#sidebar {
+  z-index: 1000;
+}
+body.sidebar-shown #toggleBtn {
+  opacity: 0;  /* sembunyikan saat sidebar tampil */
+  pointer-events: none;
+}
+  .menu-item {
+    padding: 6px;
+    cursor: pointer;	
+	
+    border-bottom: 3px solid rgba(100,255,255,0.1);
+    transition: background 0.3s;
+  }
+  .menu-item:hover,
+  .menu-item.active {
+    background: #3498db;
+  }
+
+  /* area konten */
+  #main {
+    flex: 1;  
+    margin-left: 200px;
+    transition: margin-left 0.3s ease;
+	font-family: arial, sans-serif;
+	font-size: 15px;
+    overflow-y: auto;
+    width: 100%;
+	background: #ccc;
+  }
+  body.sidebar-hidden #main {
+    margin-left: 0;
+  }
+  /* area header */
+  .mainheader { 
+    display: flex;
+    flex-direction: column;	
+    padding: 10px;    
+	font-size: 20px;
+	font-style: bold;
+	background: lightgreen;
+      color: black;
+      text-align: center;
+    }
+  
+  p { margin-top: 0; margin-bottom: 0;white-space: pre-wrap;}
+
+  /* responsive */
+  @media(max-width: 768px){
+    #main { margin-left: 0; padding-top: 10px; }
+  }
+  
+    .judul {
+	padding: 8px 10px; 
+	margin-top: 1px; 	
+	color: white;
+	background: black;
+	border-radius: 10px 10px; 	
+	cursor: pointer;			
+}
+	/* sub */
+	.sub {
+	padding: 8px 30px; 
+	color: white;
+	background: blue;
+	border-radius: 6px; 
+	margin-top: 3px; 
+	cursor: pointer;	  
+    }
+	/* sub-sub */
+	.sub-sub {
+	padding: 6px 50px;
+	color: black;
+	background: lightblue;
+	border-radius: 6px; 
+	margin-top: 3px; 
+	cursor: pointer;	
+    }
+	/* kode */
+	.kode {	
+	white-space: pre-wrap;
+	text-align: justify;	
+	padding: 8px 20px; 
+	margin-top: 2px;
+	margin-bottom: 2px;
+	  color: white;
+      background: black;
+      border-radius: 6px; 	  
+    }
+		/* penjelasan */
+	.penjelasan {
+    display: flex;
+    flex-direction: column;	
+	white-space: pre-wrap;
+	text-align: justify; 
+	line-height: 1.3;  
+	letter-spacing: 0.8px; 	/* Jarak antar huruf */ 
+	word-spacing: 2px; 	/* Jarak antar kata  */	
+	padding: 8px 20px; 
+	margin-top: 0;
+	  color: black;
+      background: #ccc;
+      border: 2px black; 	  
+    }
+	/* konten */
+  .konten {
+    padding: 5px 10px;	
+	margin-bottom: 4px;
+    cursor: pointer;
+	background: #6c757d;	
+	color: blue;	
+    border: 1px solid black;
+    transition: background 0.3s;
+  }
+  .konten:hover {
+    background: #3498db;
+  }
+	/* EVEN */	
+button {
+      padding: 8px 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  .button:hover {
+    background: #green;
+  }
+input { margin: 5px; padding: 6px 10px; border-radius: 5px; }
+.demo { border: 1px solid #ccc; padding: 10px; }
+.kotak { width: 100px; height: 100px; background: lightgray; line-height: 100px; text-align: center; }
+
+	/* TABEL  */	
+
+	table, tr{border-collapse:collapse;padding:20px;
+		margin-right:10px;
+		max-width: 100%;}
+	
+    th{ 
+		border:2px solid black;
+		background:#ddd;
+		padding:8px;
+		text-align:center;
+		}
+	td { 
+		border:2px solid black;
+		padding:5px;
+		text-align:left;
+		white-space: pre-wrap;
+		}	
+	/* ELEMEN  */		
+	section { 
+		padding-left:10px;
+		padding-right:10px;
+		}
+	/* KELAS LIST  */
+	ul, ol, li {
+	margin-bottom: 2px;
+	margin-top: 1px;
+	}
