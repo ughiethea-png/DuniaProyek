@@ -10,7 +10,7 @@
 
 		<div class="modal">
 		  <h2>Login</h2>
-		  <form id="loginForm">
+		  <form method="POST" action="https://laporan.infinityfreeapp.com/api/auth.php">
 			<div class="field"><label>Username : <input type="text" name="username" required></label></div>
 			<div class="field"><label>Password : <input type="password" name="password" required></label></div>
 			<button class="btn" type="submit" style="width:100%;">🔑Login</button>
@@ -18,26 +18,9 @@
 		  <button class="btn" onclick="window.location.href='register.html'" style="width:100%;">Registrasi</button>
 		</div>
 		
-<script type="module">
-import { login } from "./proxy.js";
-
-document.getElementById("loginForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const formData = new FormData(e.target);
-
-  try {
-    const data = await login(formData);
-    console.log(data);
-  } catch (err) {
-    console.error(err);
-    alert("Gagal terhubung ke server.");
-  }
-});
-</script>
-
-
 </body>
 </html>
+
 
 
 
