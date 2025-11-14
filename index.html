@@ -1,15 +1,33 @@
 <!DOCTYPE html>
 <html>
-<head><title>Test Firebase</title></head>
+<head>
+    <title>Aplikasi Tabungan Sederhana</title>
+</head>
 <body>
-  <h2>Koneksi Firebase</h2>
-  <pre id="output">Menunggu data...</pre>
+    <h2>Login</h2>
+    <input id="email" placeholder="Email"><br>
+    <input id="password" type="password" placeholder="Password"><br>
+    <button onclick="login()">Login</button>
+    <button onclick="register()">Register</button>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    <hr>
 
-const firebaseConfig = {
+    <h2>Tambah Nasabah</h2>
+    <input id="nama" placeholder="Nama Nasabah"><br>
+    <button onclick="tambahNasabah()">Simpan</button>
+
+    <hr>
+
+    <h2>Daftar Nasabah</h2>
+    <ul id="daftar"></ul>
+
+    <!-- Firebase Library -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+
+    <script>
+      const firebaseConfig = {
   apiKey: "AIzaSyD2tdSM2wvibgVztT34daOBE0FYKTTIBF4",
   authDomain: "tabungan-702cd.firebaseapp.com",
   projectId: "tabungan-702cd",
@@ -17,14 +35,56 @@ const firebaseConfig = {
   messagingSenderId: "1089401460941",
   appId: "1:1089401460941:web:5dcef23cd37963bef0b184"
 };
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+        function register() {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+            auth.createUserWithEmailAndPassword(email, pass)
+                .then(() => alert("Register berhasil"))
+                .catch(err => alert(err.message));
+        }
 
-console.log("Firebase Connected!");
+        function login() {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+            auth.signInWithEmailAndPassword(email, pass)
+                .then(() => alert("Login berhasil"))
+                .catch(err => alert(err.message));
+        }
 
-      document.getElementById("output").textContent = "Firebase Connected!";
-   
-  </script>
+        function tambahNasabah() {
+            const nama = document.getElementById('nama').value;
+            db.collection("nasabah").add({
+                nama: nama,
+                saldo: 0,
+                createdAt: new Date()
+            }).then(() => {
+                alert("Nasabah ditambahkan!");
+                loadNasabah();
+            });
+        }
+
+        function loadNasabah() {
+            const daftar = document.getElementById('daftar');
+            daftar.innerHTML = "";
+            db.collection("nasabah").orderBy("createdAt", "desc").get()
+                .then(snap => {
+                    snap.forEach(doc => {
+                        const data = doc.data();
+                        const li = document.createElement("li");
+                        li.innerText = data.nama + " — Saldo: " + data.saldo;
+                        daftar.appendChild(li);
+                    });
+                });
+        }
+
+        // load awal
+        loadNasabah();
+    </script>
 </body>
 </html>
+
+
