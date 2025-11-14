@@ -5,10 +5,10 @@
   <h2>Koneksi Firebase</h2>
   <pre id="output">Menunggu data...</pre>
 
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-  <script>
-    // Your web app's Firebase configuration
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyD2tdSM2wvibgVztT34daOBE0FYKTTIBF4",
   authDomain: "tabungan-702cd.firebaseapp.com",
@@ -18,12 +18,13 @@ const firebaseConfig = {
   appId: "1:1089401460941:web:5dcef23cd37963bef0b184"
 };
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-    db.ref("users/admin/nama").on("value", snap => {
-      document.getElementById("output").textContent = "Nama admin: " + snap.val();
-    });
+console.log("Firebase Connected!");
+
+      document.getElementById("output").textContent = "Firebase Connected!";
+   
   </script>
 </body>
 </html>
