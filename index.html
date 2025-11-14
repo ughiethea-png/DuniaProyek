@@ -1,89 +1,29 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Baca Data Nasabah</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #f9fafb; margin: 2rem; }
-    h1 { text-align: center; color: #333; }
-    table { width: 100%; border-collapse: collapse; margin-top: 1rem; background: white; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-    th, td { border: 1px solid #ddd; padding: 8px 10px; text-align: left; }
-    th { background: #f0f0f0; }
-    tr:hover { background: #f9f9f9; }
-    button { display: block; margin: 1rem auto; padding: 10px 20px; border: none; background: #0078ff; color: white; border-radius: 5px; cursor: pointer; }
-    button:hover { background: #005bcc; }
-    #msg { text-align: center; color: red; margin-top: 10px; }
-  </style>
-</head>
+<html>
+<head><title>Test Firebase</title></head>
 <body>
-  <h1>📋 Data Nasabah</h1>
-  <button onclick="loadNasabah()">🔄 Muat Ulang</button>
+  <h2>Koneksi Firebase</h2>
+  <pre id="output">Menunggu data...</pre>
 
-  <table id="tblNasabah">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nama</th>
-        <th>Username</th>
-        <th>Dibuat</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td colspan="4" style="text-align:center;">Memuat data...</td></tr>
-    </tbody>
-  </table>
-
-  <p id="msg"></p>
-
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <script>
-  const API_URL = "https://laporan.infinityfreeapp.com/api/read.php";
-  const PROXY_URL = "proxy.php";
+    // Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyD2tdSM2wvibgVztT34daOBE0FYKTTIBF4",
+  authDomain: "tabungan-702cd.firebaseapp.com",
+  projectId: "tabungan-702cd",
+  storageBucket: "tabungan-702cd.firebasestorage.app",
+  messagingSenderId: "1089401460941",
+  appId: "1:1089401460941:web:5dcef23cd37963bef0b184"
+};
 
-  async function fetchWithFallback(url1, url2) {
-    try {
-      const res = await fetch(url1);
-      if (!res.ok) throw new Error("Gagal (status " + res.status + ")");
-      const data = await res.json();
-      return data;
-    } catch (err) {
-      console.warn("❗ Fetch langsung gagal, coba lewat proxy...");
-      const res = await fetch(url2);
-      const data = await res.json();
-      return data;
-    }
-  }
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-  async function loadNasabah() {
-    const tbody = document.querySelector("#tblNasabah tbody");
-    const msg = document.getElementById("msg");
-    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Memuat...</td></tr>`;
-    msg.textContent = "";
-
-    try {
-      const data = await fetchWithFallback(API_URL, PROXY_URL);
-      if (!data.success) throw new Error(data.message || "Data kosong / gagal");
-
-      tbody.innerHTML = "";
-      data.data.forEach(n => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${n.id}</td>
-          <td>${n.nama}</td>
-          <td>${n.username}</td>
-          <td>${n.created_at}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-    } catch (err) {
-      tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">❌ Tidak bisa memuat data</td></tr>`;
-      msg.textContent = "Gagal: " + err.message;
-      console.error("Error:", err);
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", loadNasabah);
+    db.ref("users/admin/nama").on("value", snap => {
+      document.getElementById("output").textContent = "Nama admin: " + snap.val();
+    });
   </script>
 </body>
 </html>
