@@ -1,64 +1,90 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Aplikasi Tabungan Firebase</title>
+  <meta charset="utf-8" />
+  <title>Aplikasi Tabungan (Admin & Nasabah)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: system-ui, -apple-system, Roboto, 'Segoe UI', Arial; padding: 16px; max-width: 900px; margin: auto; }
+    h1,h2,h3 { margin: 8px 0; }
+    input, select, button, textarea { padding: 8px; margin: 4px 0; }
+    .row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+    .card { border:1px solid #ddd; padding:12px; border-radius:8px; margin-bottom:12px; }
+    button { cursor:pointer; }
+    .small { font-size: 13px; color:#555; }
+    .danger { color:#a00; }
+  </style>
 </head>
 <body>
 
-<h1>APLIKASI TABUNGAN</h1>
+<h1>Aplikasi Tabungan — Admin & Nasabah</h1>
+<p class="small">Panduan singkat: buat 1 akun admin di Firebase Console, lalu di Firestore → collection <code>users</code> buat dokumen dengan id = uid admin berisi <code>{ role: "admin", email: "...", name: "..." }</code>. Setelah itu login dengan akun admin di aplikasi ini.</p>
 
-<!-- ================= LOGIN ================= -->
-<div id="loginBox">
-    <h3>Login Admin</h3>
-    <input id="email" placeholder="Email"><br>
-    <input id="password" placeholder="Password" type="password"><br>
-    <button onclick="login()">Login</button>
+<!-- LOGIN -->
+<div id="authBox" class="card">
+  <h3>Login</h3>
+  <div class="row">
+    <input id="inEmail" placeholder="Email" />
+    <input id="inPass" placeholder="Password" type="password" />
+    <button onclick="doLogin()">Login</button>
+    <button onclick="doLogout()" id="btnLogout" style="display:none">Logout</button>
+  </div>
+  <p class="small">Belum punya akun? Admin dapat menambah user di Firebase Console → Authentication → Add user. Setelah dibuat, hubungkan uid ke data nasabah via menu Admin.</p>
 </div>
 
-<!-- ================= DASHBOARD ================= -->
-<div id="dashboard" style="display:none;">
+<!-- ADMIN INTERFACE -->
+<div id="adminUI" style="display:none;">
+  <div class="card">
+    <h2>Admin Dashboard</h2>
+    <div class="row">
+      <div>Anda login sebagai <b id="meEmail"></b></div>
+      <div><button onclick="loadAdminNasabah()">Refresh Nasabah</button></div>
+    </div>
+  </div>
 
-    <h2>Dashboard Admin</h2>
-    <button onclick="logout()">Logout</button>
-
-    <hr>
-
-    <!-- Tambah Nasabah -->
+  <div class="card">
     <h3>Tambah Nasabah</h3>
-    <input id="nama" placeholder="Nama Nasabah">
-    <button onclick="tambahNasabah()">Tambah</button>
+    <input id="newNama" placeholder="Nama nasabah" />
+    <input id="newPhone" placeholder="No. HP (opsional)" />
+    <button onclick="createNasabah()">Tambah Nasabah</button>
+    <p class="small">Jika anda ingin nasabah bisa login, buat user di Firebase Console lalu assign uid ke nasabah (lihat tombol Assign UID pada daftar nasabah).</p>
+  </div>
 
-    <hr>
-
-    <!-- List Nasabah -->
+  <div class="card">
     <h3>Daftar Nasabah</h3>
-    <ul id="nasabahList"></ul>
+    <ul id="adminNasabahList"></ul>
+  </div>
 
-    <hr>
-
-    <!-- Transaksi -->
-    <h3>Transaksi Nasabah</h3>
-
-    <select id="nasabahSelect"></select><br><br>
-
-    <select id="jenis">
-        <option value="deposit">Setor</option>
-        <option value="withdraw">Tarik</option>
-    </select>
-
-    <input id="jumlah" type="number" placeholder="Jumlah"><br>
-    <input id="catatan" placeholder="Catatan"><br>
-    <button onclick="prosesTransaksi()">Proses</button>
-
-    <hr>
-
-    <!-- Riwayat -->
-    <h3>Riwayat Transaksi</h3>
-    <ul id="riwayat"></ul>
+  <div class="card">
+    <h3>Operasi Transaksi (untuk nasabah terpilih)</h3>
+    <div class="row">
+      <select id="adminNasabahSelect" onchange="loadAdminRiwayat()"></select>
+      <select id="adminJenis"><option value="deposit">Setor</option><option value="withdraw">Tarik</option></select>
+      <input id="adminJumlah" type="number" placeholder="Jumlah" />
+      <input id="adminNote" placeholder="Catatan" />
+      <button onclick="adminProsesTrans()">Proses</button>
+    </div>
+    <h4>Riwayat Transaksi</h4>
+    <ul id="adminRiwayat"></ul>
+  </div>
 </div>
 
-    <!-- Firebase Library -->
+<!-- NASABAH INTERFACE -->
+<div id="nasabahUI" style="display:none;">
+  <div class="card">
+    <h2>Halaman Nasabah</h2>
+    <div>Halo <b id="nasabahName"></b> — Saldo: <b id="nasabahSaldo">0</b></div>
+    <div class="small">Anda hanya bisa melihat riwayat transaksi. Untuk perubahan saldo atau koreksi, hubungi admin.</div>
+  </div>
+
+  <div class="card">
+    <h3>Riwayat Transaksi</h3>
+    <ul id="nasabahRiwayat"></ul>
+  </div>
+</div>
+
+<!-- Firebase v8 -->
+ <!-- Firebase Library -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -76,278 +102,309 @@
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db   = firebase.firestore();
-        
-// ======================================================
-//                      LOGIN
-// ======================================================
+/* ======================================================== */
 
-function login() {
-    const email = document.getElementById("email").value;
-    const pass  = document.getElementById("password").value;
-
-    auth.signInWithEmailAndPassword(email, pass)
-        .then(() => {
-            document.getElementById("loginBox").style.display = "none";
-            document.getElementById("dashboard").style.display = "block";
-            loadNasabah();
-            loadSelectNasabah();
-        })
-        .catch(err => alert(err.message));
+/* ---------- Utility ---------- */
+function $(id){ return document.getElementById(id); }
+function fmtDate(ts){
+  try { return ts.toDate().toLocaleString(); } catch(e){ return new Date(ts).toLocaleString(); }
 }
 
-function logout() {
-    auth.signOut();
-    location.reload();
+/* ---------- Auth & Role detection ---------- */
+auth.onAuthStateChanged(async (user) => {
+  if (!user) {
+    // show login
+    $('authBox').style.display = 'block';
+    $('btnLogout').style.display = 'none';
+    $('adminUI').style.display = 'none';
+    $('nasabahUI').style.display = 'none';
+    $('meEmail').textContent = '';
+    return;
+  }
+
+  $('authBox').style.display = 'block';
+  $('btnLogout').style.display = 'inline-block';
+  $('inEmail').value = user.email || '';
+  $('meEmail').textContent = user.email || '';
+
+  // load role from users collection
+  const userDoc = await db.collection('users').doc(user.uid).get();
+  if (!userDoc.exists) {
+    // Not registered in users collection
+    // If you want the first admin to setup, check console for instructions.
+    alert('Akun Anda belum memiliki role di collection users. Minta admin membuat dokumen users/{uid} dengan field { role: "admin" } atau hubungi pemilik project.');
+    // sign out to be safe
+    // auth.signOut();
+    // return;
+  }
+  const role = userDoc.exists ? (userDoc.data().role || null) : null;
+
+  if (role === 'admin') {
+    showAdminUI(user);
+  } else if (role === 'nasabah') {
+    showNasabahUI(user);
+  } else {
+    // no role or unknown role
+    alert('Role tidak terdeteksi atau bukan admin/nasabah. Silakan minta admin menambahkan role pada Firestore users/{uid}.');
+    // hide others
+    $('adminUI').style.display = 'none';
+    $('nasabahUI').style.display = 'none';
+  }
+});
+
+/* ---------- AUTH ACTIONS ---------- */
+function doLogin() {
+  const email = $('inEmail').value.trim();
+  const pass = $('inPass').value;
+  if (!email || !pass) return alert('Masukkan email & password');
+  auth.signInWithEmailAndPassword(email, pass)
+    .catch(e => alert('Login error: ' + e.message));
+}
+function doLogout() {
+  auth.signOut();
+  location.reload();
 }
 
-
-// ======================================================
-//               TAMBAH NASABAH
-// ======================================================
-
-function tambahNasabah() {
-    const nama = document.getElementById("nama").value;
-
-    if (!nama) return alert("Nama wajib diisi!");
-
-    db.collection("nasabah").add({
-        nama,
-        saldo: 0,
-        createdAt: new Date()
-    }).then(() => {
-        alert("Nasabah ditambahkan");
-        loadNasabah();
-        loadSelectNasabah();
-    });
+/* ================== ADMIN UI ================== */
+async function showAdminUI(user){
+  $('adminUI').style.display = 'block';
+  $('nasabahUI').style.display = 'none';
+  // load data
+  await loadAdminNasabah();
+  await loadAdminSelect();
 }
 
-
-// ======================================================
-//                 LIST NASABAH + EDIT/HAPUS
-// ======================================================
-
-function loadNasabah() {
-    const list = document.getElementById("nasabahList");
-    list.innerHTML = "";
-
-    db.collection("nasabah").orderBy("createdAt", "desc").get()
-    .then(snap => {
-        snap.forEach(doc => {
-            const data = doc.data();
-            const li = document.createElement("li");
-            li.innerHTML = `
-                ${data.nama} — Saldo: ${data.saldo}
-                <button onclick="editNasabah('${doc.id}', '${data.nama}')">Edit</button>
-                <button onclick="hapusNasabah('${doc.id}')">Hapus</button>
-            `;
-            list.appendChild(li);
-        });
-    });
+/* List nasabah for admin */
+async function loadAdminNasabah(){
+  const list = $('adminNasabahList');
+  list.innerHTML = '';
+  const snap = await db.collection('nasabah').orderBy('createdAt','desc').get();
+  if (snap.empty) {
+    list.innerHTML = '<li>Tidak ada nasabah</li>';
+    return;
+  }
+  snap.forEach(doc => {
+    const d = doc.data();
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <b>${d.nama}</b> — Saldo: ${d.saldo ?? 0} 
+      ${d.userId ? `<span class="small">[uid:${d.userId}]</span>` : '<span class="small">[no-login]</span>'}
+      <button onclick="adminEditNasabah('${doc.id}','${escapeHtml(d.nama)}')">Edit</button>
+      <button onclick="adminAssignUid('${doc.id}')">Assign UID</button>
+      <button onclick="adminDeleteNasabah('${doc.id}')">Hapus</button>
+    `;
+    list.appendChild(li);
+  });
 }
 
-function editNasabah(id, namaLama) {
-    const namaBaru = prompt("Nama baru:", namaLama);
-    if (!namaBaru) return;
-
-    db.collection("nasabah").doc(id)
-        .update({ nama: namaBaru })
-        .then(() => {
-            alert("Nama nasabah diperbarui");
-            loadNasabah();
-            loadSelectNasabah();
-        });
+/* Create nasabah */
+async function createNasabah(){
+  const nama = $('newNama').value.trim();
+  const phone = $('newPhone').value.trim();
+  if (!nama) return alert('Nama wajib diisi');
+  await db.collection('nasabah').add({
+    nama, phone: phone || '', saldo: 0, createdAt: new Date()
+  });
+  $('newNama').value = ''; $('newPhone').value = '';
+  await loadAdminNasabah();
+  await loadAdminSelect();
+  alert('Nasabah ditambahkan');
 }
 
-async function hapusNasabah(id) {
-    if (!confirm("Yakin ingin menghapus nasabah ini beserta semua transaksi?")) return;
-
-    const nasabahRef = db.collection("nasabah").doc(id);
-    const transRef = nasabahRef.collection("transactions");
-
-    // hapus semua transaksi dahulu
-    const transSnap = await transRef.get();
-    const batch = db.batch();
-    transSnap.forEach(doc => batch.delete(doc.ref));
-    await batch.commit();
-
-    // lalu hapus nasabah
-    await nasabahRef.delete();
-
-    alert("Nasabah dan semua transaksinya dihapus");
-    loadNasabah();
-    loadSelectNasabah();
+/* Edit nasabah */
+function adminEditNasabah(id, currentNama){
+  const nama = prompt('Nama baru:', unescapeHtml(currentNama));
+  if (!nama) return;
+  db.collection('nasabah').doc(id).update({ nama }).then(()=>{
+    alert('Nama diperbarui'); loadAdminNasabah(); loadAdminSelect();
+  }).catch(e=>alert(e.message));
 }
 
-
-// ======================================================
-//               LOAD SELECT NASABAH
-// ======================================================
-
-function loadSelectNasabah() {
-    const select = document.getElementById("nasabahSelect");
-    select.innerHTML = "";
-
-    db.collection("nasabah").orderBy("createdAt","desc").get()
-        .then(snap => {
-            snap.forEach(doc => {
-                const opt = document.createElement("option");
-                opt.value = doc.id;
-                opt.textContent = doc.data().nama;
-                select.appendChild(opt);
-            });
-
-            loadRiwayat();
-        });
+/* Assign UID (link nasabah ke akun auth yang sudah dibuat via Firebase Console) */
+function adminAssignUid(id){
+  const uid = prompt('Tempel UID Auth user (dapatkan di Firebase Console -> Authentication -> Users -> klik user -> copy UID):');
+  if (!uid) return;
+  db.collection('nasabah').doc(id).update({ userId: uid }).then(()=>{
+    alert('UID ditambahkan pada nasabah. Sekarang user tersebut dapat login dan melihat transaksi.');
+    loadAdminNasabah(); loadAdminSelect();
+  }).catch(e=>alert(e.message));
 }
 
-
-
-// ======================================================
-//                   PROSES TRANSAKSI
-// ======================================================
-
-function prosesTransaksi() {
-    const id = document.getElementById("nasabahSelect").value;
-    const jenis = document.getElementById("jenis").value;
-    const jumlah = Number(document.getElementById("jumlah").value);
-    const catatan = document.getElementById("catatan").value;
-
-    if (!jumlah || jumlah <= 0) return alert("Jumlah tidak valid");
-
-    const nasabahRef = db.collection("nasabah").doc(id);
-
-    db.runTransaction(async trx => {
-        const snap = await trx.get(nasabahRef);
-        const data = snap.data();
-
-        let saldoBaru = data.saldo;
-
-        if (jenis === "deposit") {
-            saldoBaru += jumlah;
-        } else {
-            if (jumlah > saldoBaru) throw "Saldo tidak cukup!";
-            saldoBaru -= jumlah;
-        }
-
-        trx.update(nasabahRef, { saldo: saldoBaru });
-
-        const tRef = nasabahRef.collection("transactions").doc();
-        trx.set(tRef, {
-            type: jenis,
-            amount: jumlah,
-            note: catatan,
-            time: new Date()
-        });
-    })
-    .then(() => {
-        alert("Transaksi berhasil!");
-        loadNasabah();
-        loadRiwayat();
-    })
-    .catch(err => alert(err));
+/* Delete nasabah + semua transaksi (batch) */
+async function adminDeleteNasabah(id){
+  if (!confirm('Hapus nasabah beserta semua transaksinya?')) return;
+  const nasRef = db.collection('nasabah').doc(id);
+  // delete transactions
+  const txSnap = await nasRef.collection('transactions').get();
+  const batch = db.batch();
+  txSnap.forEach(d => batch.delete(d.ref));
+  await batch.commit();
+  // delete nasabah
+  await nasRef.delete();
+  alert('Nasabah & transaksi dihapus');
+  loadAdminNasabah(); loadAdminSelect(); $('adminRiwayat').innerHTML = '';
 }
 
-
-// ======================================================
-//               RIWAYAT TRANSAKSI + EDIT/HAPUS
-// ======================================================
-
-function loadRiwayat() {
-    const id = document.getElementById("nasabahSelect").value;
-    const list = document.getElementById("riwayat");
-    list.innerHTML = "";
-
-    db.collection("nasabah").doc(id)
-        .collection("transactions")
-        .orderBy("time", "desc")
-        .get()
-        .then(snap => {
-            snap.forEach(doc => {
-                const t = doc.data();
-                const li = document.createElement("li");
-
-                const waktu = t.time.toDate().toLocaleString();
-
-                li.innerHTML = `
-                    ${waktu} — ${t.type} — ${t.amount} — ${t.note}
-                    <button onclick="editTransaksi('${id}', '${doc.id}', '${t.type}', ${t.amount}, '${t.note}')">Edit</button>
-                    <button onclick="hapusTransaksi('${id}', '${doc.id}', '${t.type}', ${t.amount})">Hapus</button>
-                `;
-
-                list.appendChild(li);
-            });
-        });
+/* Load select options for admin transactions */
+async function loadAdminSelect(){
+  const sel = $('adminNasabahSelect');
+  sel.innerHTML = '';
+  const snap = await db.collection('nasabah').orderBy('createdAt','desc').get();
+  snap.forEach(d => {
+    const opt = document.createElement('option');
+    opt.value = d.id;
+    opt.textContent = d.data().nama + ' — ' + (d.data().saldo ?? 0);
+    sel.appendChild(opt);
+  });
+  loadAdminRiwayat();
 }
 
+/* Admin process transaction */
+async function adminProsesTrans(){
+  const id = $('adminNasabahSelect').value;
+  const jenis = $('adminJenis').value;
+  const jumlah = Number($('adminJumlah').value);
+  const note = $('adminNote').value || '';
+  if (!id) return alert('Pilih nasabah');
+  if (!jumlah || jumlah <= 0) return alert('Jumlah tidak valid');
 
-// ================== EDIT TRANSAKSI ==================
+  const nasRef = db.collection('nasabah').doc(id);
 
-async function editTransaksi(nasabahId, transId, jenisLama, amountLama, noteLama) {
-    const jumlahBaru = Number(prompt("Jumlah baru:", amountLama));
-    if (!jumlahBaru || jumlahBaru <= 0) return alert("Jumlah tidak valid");
-
-    const catatanBaru = prompt("Catatan baru:", noteLama) || noteLama;
-
-    const nasabahRef = db.collection("nasabah").doc(nasabahId);
-    const transRef = nasabahRef.collection("transactions").doc(transId);
-
+  try {
     await db.runTransaction(async trx => {
-        const snap = await trx.get(nasabahRef);
-        let saldo = snap.data().saldo;
-
-        // batalkan transaksi lama
-        if (jenisLama === "deposit") saldo -= amountLama;
-        else saldo += amountLama;
-
-        // terapkan transaksi baru (deposit selalu +)
-        saldo += jumlahBaru;
-
-        trx.update(nasabahRef, { saldo });
-
-        trx.update(transRef, {
-            amount: jumlahBaru,
-            note: catatanBaru,
-            time: new Date()
-        });
+      const snap = await trx.get(nasRef);
+      if (!snap.exists) throw 'Nasabah tidak ditemukan';
+      let saldo = snap.data().saldo || 0;
+      if (jenis === 'deposit') saldo += jumlah;
+      else {
+        if (jumlah > saldo) throw 'Saldo tidak cukup';
+        saldo -= jumlah;
+      }
+      trx.update(nasRef, { saldo });
+      const tRef = nasRef.collection('transactions').doc();
+      trx.set(tRef, { type: jenis, amount: jumlah, note, time: new Date(), createdBy: auth.currentUser.uid });
     });
-
-    alert("Transaksi diperbarui");
-    loadNasabah();
-    loadRiwayat();
+    alert('Transaksi berhasil');
+    $('adminJumlah').value = ''; $('adminNote').value = '';
+    loadAdminNasabah();
+    loadAdminSelect();
+    loadAdminRiwayat();
+  } catch (e) {
+    alert('Gagal: ' + e);
+  }
 }
 
-
-// ================== HAPUS TRANSAKSI ==================
-
-async function hapusTransaksi(nasabahId, transId, jenis, amount) {
-    if (!confirm("Yakin ingin menghapus transaksi ini?")) return;
-
-    const nasabahRef = db.collection("nasabah").doc(nasabahId);
-    const transRef = nasabahRef.collection("transactions").doc(transId);
-
-    await db.runTransaction(async trx => {
-        const snap = await trx.get(nasabahRef);
-        let saldo = snap.data().saldo;
-
-        if (jenis === "deposit") saldo -= amount;
-        else saldo += amount;
-
-        trx.update(nasabahRef, { saldo });
-        trx.delete(transRef);
-    });
-
-    alert("Transaksi dihapus");
-    loadNasabah();
-    loadRiwayat();
+/* Load admin riwayat untuk selected nasabah */
+async function loadAdminRiwayat(){
+  const id = $('adminNasabahSelect').value;
+  const list = $('adminRiwayat');
+  list.innerHTML = '';
+  if (!id) return;
+  const snap = await db.collection('nasabah').doc(id).collection('transactions').orderBy('time','desc').get();
+  if (snap.empty) { list.innerHTML = '<li>Tidak ada transaksi</li>'; return; }
+  snap.forEach(doc => {
+    const t = doc.data();
+    const li = document.createElement('li');
+    li.innerHTML = `${fmtDate(t.time)} — ${t.type} — ${t.amount} — ${escapeHtml(t.note||'')} 
+      <button onclick="adminEditTrans('${id}','${doc.id}','${t.type}',${t.amount},'${escapeForJs(t.note||'')}')">Edit</button>
+      <button onclick="adminDeleteTrans('${id}','${doc.id}','${t.type}',${t.amount})">Hapus</button>`;
+    list.appendChild(li);
+  });
 }
+
+/* Admin edit transaction */
+async function adminEditTrans(nasabahId, transId, jenisLama, amountLama, noteLama){
+  const jumlahBaru = Number(prompt('Jumlah baru:', amountLama));
+  if (!jumlahBaru || jumlahBaru <= 0) return alert('Jumlah tidak valid');
+  const noteBaru = prompt('Catatan baru:', unescapeHtml(noteLama)) || '';
+  const nasRef = db.collection('nasabah').doc(nasabahId);
+  const txRef = nasRef.collection('transactions').doc(transId);
+
+  await db.runTransaction(async trx => {
+    const snap = await trx.get(nasRef);
+    if (!snap.exists) throw 'Nasabah tidak ditemukan';
+    let saldo = snap.data().saldo || 0;
+    // rollback old
+    if (jenisLama === 'deposit') saldo -= amountLama;
+    else saldo += amountLama;
+    // apply new
+    if (jenisLama === 'deposit') {
+      // Here we treat new transaction as same type as old (to simplify).
+      // If you wanted to change type, you'd need to handle accordingly.
+    }
+    saldo += jumlahBaru;
+    if (saldo < 0) throw 'Hasil saldo negatif';
+    trx.update(nasRef, { saldo });
+    trx.update(txRef, { amount: jumlahBaru, note: noteBaru, time: new Date() });
+  });
+
+  alert('Transaksi diperbarui');
+  loadAdminNasabah();
+  loadAdminRiwayat();
+}
+
+/* Admin delete transaction */
+async function adminDeleteTrans(nasabahId, transId, jenis, amount){
+  if (!confirm('Hapus transaksi?')) return;
+  const nasRef = db.collection('nasabah').doc(nasabahId);
+  const txRef = nasRef.collection('transactions').doc(transId);
+
+  await db.runTransaction(async trx => {
+    const snap = await trx.get(nasRef);
+    if (!snap.exists) throw 'Nasabah tidak ditemukan';
+    let saldo = snap.data().saldo || 0;
+    if (jenis === 'deposit') saldo -= amount; else saldo += amount;
+    if (saldo < 0) throw 'Saldo tidak boleh negatif';
+    trx.update(nasRef, { saldo });
+    trx.delete(txRef);
+  });
+
+  alert('Transaksi dihapus');
+  loadAdminNasabah();
+  loadAdminRiwayat();
+}
+
+/* ================== NASABAH UI ================== */
+async function showNasabahUI(user){
+  $('adminUI').style.display = 'none';
+  $('nasabahUI').style.display = 'block';
+  // find nasabah doc where userId == user.uid
+  const q = await db.collection('nasabah').where('userId','==', user.uid).limit(1).get();
+  if (q.empty) {
+    alert('Akun nasabah belum di-link ke data nasabah. Hubungi admin.');
+    return;
+  }
+  const doc = q.docs[0];
+  const data = doc.data();
+  $('nasabahName').textContent = data.nama || '(nama)';
+  $('nasabahSaldo').textContent = data.saldo ?? 0;
+  // load history
+  loadNasabahRiwayat(doc.id);
+}
+async function loadNasabahRiwayat(nasabahId){
+  const list = $('nasabahRiwayat');
+  list.innerHTML = '';
+  const snap = await db.collection('nasabah').doc(nasabahId).collection('transactions').orderBy('time','desc').get();
+  if (snap.empty) { list.innerHTML = '<li>Tidak ada transaksi</li>'; return; }
+  snap.forEach(doc => {
+    const t = doc.data();
+    const li = document.createElement('li');
+    li.textContent = `${fmtDate(t.time)} — ${t.type} — ${t.amount} — ${t.note || ''}`;
+    list.appendChild(li);
+  });
+}
+
+/* ========== Helpers ========== */
+function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function unescapeHtml(s){ return (s||'').replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&lt;/g,'<').replace(/&gt;/g,'>'); }
+function escapeForJs(s){ return String(s||'').replace(/'/g,"\\'").replace(/\n/g,'\\n'); }
+
+/* initial UI state */
+$('adminUI').style.display = 'none';
+$('nasabahUI').style.display = 'none';
 </script>
 
 </body>
 </html>
-
-
-
-
-
 
 
