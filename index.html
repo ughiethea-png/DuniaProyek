@@ -1,31 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Aplikasi Tabungan Sederhana</title>
+    <meta charset="UTF-8">
+    <title>Aplikasi Tabungan Firebase</title>
 </head>
 <body>
-    <h2>Login</h2>
+
+<h1>APLIKASI TABUNGAN</h1>
+
+<!-- ================= LOGIN ================= -->
+<div id="loginBox">
+    <h3>Login Admin</h3>
     <input id="email" placeholder="Email"><br>
-    <input id="password" type="password" placeholder="Password"><br>
+    <input id="password" placeholder="Password" type="password"><br>
     <button onclick="login()">Login</button>
-    <button onclick="register()">Register</button>
+</div>
+
+<!-- ================= DASHBOARD ================= -->
+<div id="dashboard" style="display:none;">
+
+    <h2>Dashboard Admin</h2>
+    <button onclick="logout()">Logout</button>
 
     <hr>
 
-    <h2>Tambah Nasabah</h2>
-    <input id="nama" placeholder="Nama Nasabah"><br>
-    <button onclick="tambahNasabah()">Simpan</button>
+    <!-- Tambah Nasabah -->
+    <h3>Tambah Nasabah</h3>
+    <input id="nama" placeholder="Nama Nasabah">
+    <button onclick="tambahNasabah()">Tambah</button>
 
     <hr>
 
-    <h2>Daftar Nasabah</h2>
-    <ul id="daftar"></ul>
+    <!-- List Nasabah -->
+    <h3>Daftar Nasabah</h3>
+    <ul id="nasabahList"></ul>
+
+    <hr>
+
+    <!-- Transaksi -->
+    <h3>Transaksi Nasabah</h3>
+
+    <select id="nasabahSelect"></select><br><br>
+
+    <select id="jenis">
+        <option value="deposit">Setor</option>
+        <option value="withdraw">Tarik</option>
+    </select>
+
+    <input id="jumlah" type="number" placeholder="Jumlah"><br>
+    <input id="catatan" placeholder="Catatan"><br>
+    <button onclick="prosesTransaksi()">Proses</button>
+
+    <hr>
+
+    <!-- Riwayat -->
+    <h3>Riwayat Transaksi</h3>
+    <ul id="riwayat"></ul>
+</div>
+
 
     <!-- Firebase Library -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script>
+        // ================== CONFIG FIREBASE ==================
       const firebaseConfig = {
   apiKey: "AIzaSyD2tdSM2wvibgVztT34daOBE0FYKTTIBF4",
   authDomain: "tabungan-702cd.firebaseapp.com",
@@ -35,58 +74,172 @@
   messagingSenderId: "1089401460941",
   appId: "1:1089401460941:web:5dcef23cd37963bef0b184"
 };
-        const app = firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+        
+firebase.initializeApp(firebaseConfig);
 
-        function register() {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('password').value;
-            auth.createUserWithEmailAndPassword(email, pass)
-                .then(() => alert("Register berhasil"))
-                .catch(err => alert(err.message));
-        }
+const auth = firebase.auth();
+const db   = firebase.firestore();
 
-        function login() {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('password').value;
-            auth.signInWithEmailAndPassword(email, pass)
-                .then(() => alert("Login berhasil"))
-                .catch(err => alert(err.message));
-        }
 
-        function tambahNasabah() {
-            const nama = document.getElementById('nama').value;
-            db.collection("nasabah").add({
-                nama: nama,
-                saldo: 0,
-                createdAt: new Date()
-            }).then(() => {
-                alert("Nasabah ditambahkan!");
-                loadNasabah();
-            });
-        }
+// ======================================================
+//                      LOGIN
+// ======================================================
 
-        function loadNasabah() {
-            const daftar = document.getElementById('daftar');
-            daftar.innerHTML = "";
-            db.collection("nasabah").orderBy("createdAt", "desc").get()
-                .then(snap => {
-                    snap.forEach(doc => {
-                        const data = doc.data();
-                        const li = document.createElement("li");
-                        li.innerText = data.nama + " — Saldo: " + data.saldo;
-                        daftar.appendChild(li);
-                    });
-                });
-        }
+function login() {
+    const email = document.getElementById("email").value;
+    const pass  = document.getElementById("password").value;
 
-        // load awal
+    auth.signInWithEmailAndPassword(email, pass)
+        .then(() => {
+            document.getElementById("loginBox").style.display = "none";
+            document.getElementById("dashboard").style.display = "block";
+            loadNasabah();
+            loadSelectNasabah();
+        })
+        .catch(err => alert(err.message));
+}
+
+function logout() {
+    auth.signOut();
+    location.reload();
+}
+
+
+// ======================================================
+//               TAMBAH NASABAH
+// ======================================================
+
+function tambahNasabah() {
+    const nama = document.getElementById("nama").value;
+
+    if (!nama) return alert("Nama wajib diisi!");
+
+    db.collection("nasabah").add({
+        nama,
+        saldo: 0,
+        createdAt: new Date()
+    }).then(() => {
+        alert("Nasabah ditambahkan");
         loadNasabah();
-    </script>
+        loadSelectNasabah();
+    });
+}
+
+
+// ======================================================
+//                 LIST NASABAH
+// ======================================================
+
+function loadNasabah() {
+    const list = document.getElementById("nasabahList");
+    list.innerHTML = "";
+
+    db.collection("nasabah").orderBy("createdAt", "desc").get()
+    .then(snap => {
+        snap.forEach(doc => {
+            const data = doc.data();
+            const li = document.createElement("li");
+            li.textContent = `${data.nama} — Saldo: ${data.saldo}`;
+            list.appendChild(li);
+        });
+    });
+}
+
+
+// ======================================================
+//               LOAD SELECT NASABAH
+// ======================================================
+
+function loadSelectNasabah() {
+    const select = document.getElementById("nasabahSelect");
+    select.innerHTML = "";
+
+    db.collection("nasabah").orderBy("createdAt","desc").get()
+        .then(snap => {
+            snap.forEach(doc => {
+                const opt = document.createElement("option");
+                opt.value = doc.id;
+                opt.textContent = doc.data().nama;
+                select.appendChild(opt);
+            });
+
+            loadRiwayat();
+        });
+}
+
+
+
+// ======================================================
+//                   PROSES TRANSAKSI
+// ======================================================
+
+function prosesTransaksi() {
+    const id = document.getElementById("nasabahSelect").value;
+    const jenis = document.getElementById("jenis").value;
+    const jumlah = Number(document.getElementById("jumlah").value);
+    const catatan = document.getElementById("catatan").value;
+
+    if (!jumlah || jumlah <= 0) return alert("Jumlah tidak valid");
+
+    const nasabahRef = db.collection("nasabah").doc(id);
+
+    db.runTransaction(async trx => {
+        const snap = await trx.get(nasabahRef);
+        const data = snap.data();
+
+        let saldoBaru = data.saldo;
+
+        if (jenis === "deposit") {
+            saldoBaru += jumlah;
+        } else {
+            if (jumlah > saldoBaru) throw "Saldo tidak cukup!";
+            saldoBaru -= jumlah;
+        }
+
+        trx.update(nasabahRef, { saldo: saldoBaru });
+
+        // Save transaksi
+        const tRef = nasabahRef.collection("transactions").doc();
+        trx.set(tRef, {
+            type: jenis,
+            amount: jumlah,
+            note: catatan,
+            time: new Date()
+        });
+    })
+    .then(() => {
+        alert("Transaksi berhasil!");
+        loadNasabah();
+        loadRiwayat();
+    })
+    .catch(err => alert(err));
+}
+
+
+// ======================================================
+//               RIWAYAT TRANSAKSI
+// ======================================================
+
+function loadRiwayat() {
+    const id = document.getElementById("nasabahSelect").value;
+    const list = document.getElementById("riwayat");
+    list.innerHTML = "";
+
+    db.collection("nasabah").doc(id)
+        .collection("transactions")
+        .orderBy("time", "desc")
+        .get()
+        .then(snap => {
+            snap.forEach(doc => {
+                const t = doc.data();
+                const li = document.createElement("li");
+                li.textContent = `${new Date(t.time.toDate()).toLocaleString()} — ${t.type} — ${t.amount} — ${t.note}`;
+                list.appendChild(li);
+            });
+        });
+}
+</script>
+
 </body>
 </html>
-
-
-
 
