@@ -58,7 +58,6 @@
     <ul id="riwayat"></ul>
 </div>
 
-
     <!-- Firebase Library -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -73,14 +72,11 @@
   storageBucket: "tabungan-702cd.firebasestorage.app",
   messagingSenderId: "1089401460941",
   appId: "1:1089401460941:web:5dcef23cd37963bef0b184"
-};
-        
+};        
 firebase.initializeApp(firebaseConfig);
-
 const auth = firebase.auth();
 const db   = firebase.firestore();
-
-
+        
 // ======================================================
 //                      LOGIN
 // ======================================================
@@ -127,7 +123,7 @@ function tambahNasabah() {
 
 
 // ======================================================
-//                 LIST NASABAH
+//                 LIST NASABAH + EDIT/HAPUS
 // ======================================================
 
 function loadNasabah() {
@@ -139,10 +135,47 @@ function loadNasabah() {
         snap.forEach(doc => {
             const data = doc.data();
             const li = document.createElement("li");
-            li.textContent = `${data.nama} — Saldo: ${data.saldo}`;
+            li.innerHTML = `
+                ${data.nama} — Saldo: ${data.saldo}
+                <button onclick="editNasabah('${doc.id}', '${data.nama}')">Edit</button>
+                <button onclick="hapusNasabah('${doc.id}')">Hapus</button>
+            `;
             list.appendChild(li);
         });
     });
+}
+
+function editNasabah(id, namaLama) {
+    const namaBaru = prompt("Nama baru:", namaLama);
+    if (!namaBaru) return;
+
+    db.collection("nasabah").doc(id)
+        .update({ nama: namaBaru })
+        .then(() => {
+            alert("Nama nasabah diperbarui");
+            loadNasabah();
+            loadSelectNasabah();
+        });
+}
+
+async function hapusNasabah(id) {
+    if (!confirm("Yakin ingin menghapus nasabah ini beserta semua transaksi?")) return;
+
+    const nasabahRef = db.collection("nasabah").doc(id);
+    const transRef = nasabahRef.collection("transactions");
+
+    // hapus semua transaksi dahulu
+    const transSnap = await transRef.get();
+    const batch = db.batch();
+    transSnap.forEach(doc => batch.delete(doc.ref));
+    await batch.commit();
+
+    // lalu hapus nasabah
+    await nasabahRef.delete();
+
+    alert("Nasabah dan semua transaksinya dihapus");
+    loadNasabah();
+    loadSelectNasabah();
 }
 
 
@@ -198,7 +231,6 @@ function prosesTransaksi() {
 
         trx.update(nasabahRef, { saldo: saldoBaru });
 
-        // Save transaksi
         const tRef = nasabahRef.collection("transactions").doc();
         trx.set(tRef, {
             type: jenis,
@@ -217,7 +249,7 @@ function prosesTransaksi() {
 
 
 // ======================================================
-//               RIWAYAT TRANSAKSI
+//               RIWAYAT TRANSAKSI + EDIT/HAPUS
 // ======================================================
 
 function loadRiwayat() {
@@ -233,13 +265,89 @@ function loadRiwayat() {
             snap.forEach(doc => {
                 const t = doc.data();
                 const li = document.createElement("li");
-                li.textContent = `${new Date(t.time.toDate()).toLocaleString()} — ${t.type} — ${t.amount} — ${t.note}`;
+
+                const waktu = t.time.toDate().toLocaleString();
+
+                li.innerHTML = `
+                    ${waktu} — ${t.type} — ${t.amount} — ${t.note}
+                    <button onclick="editTransaksi('${id}', '${doc.id}', '${t.type}', ${t.amount}, '${t.note}')">Edit</button>
+                    <button onclick="hapusTransaksi('${id}', '${doc.id}', '${t.type}', ${t.amount})">Hapus</button>
+                `;
+
                 list.appendChild(li);
             });
         });
+}
+
+
+// ================== EDIT TRANSAKSI ==================
+
+async function editTransaksi(nasabahId, transId, jenisLama, amountLama, noteLama) {
+    const jumlahBaru = Number(prompt("Jumlah baru:", amountLama));
+    if (!jumlahBaru || jumlahBaru <= 0) return alert("Jumlah tidak valid");
+
+    const catatanBaru = prompt("Catatan baru:", noteLama) || noteLama;
+
+    const nasabahRef = db.collection("nasabah").doc(nasabahId);
+    const transRef = nasabahRef.collection("transactions").doc(transId);
+
+    await db.runTransaction(async trx => {
+        const snap = await trx.get(nasabahRef);
+        let saldo = snap.data().saldo;
+
+        // batalkan transaksi lama
+        if (jenisLama === "deposit") saldo -= amountLama;
+        else saldo += amountLama;
+
+        // terapkan transaksi baru (deposit selalu +)
+        saldo += jumlahBaru;
+
+        trx.update(nasabahRef, { saldo });
+
+        trx.update(transRef, {
+            amount: jumlahBaru,
+            note: catatanBaru,
+            time: new Date()
+        });
+    });
+
+    alert("Transaksi diperbarui");
+    loadNasabah();
+    loadRiwayat();
+}
+
+
+// ================== HAPUS TRANSAKSI ==================
+
+async function hapusTransaksi(nasabahId, transId, jenis, amount) {
+    if (!confirm("Yakin ingin menghapus transaksi ini?")) return;
+
+    const nasabahRef = db.collection("nasabah").doc(nasabahId);
+    const transRef = nasabahRef.collection("transactions").doc(transId);
+
+    await db.runTransaction(async trx => {
+        const snap = await trx.get(nasabahRef);
+        let saldo = snap.data().saldo;
+
+        if (jenis === "deposit") saldo -= amount;
+        else saldo += amount;
+
+        trx.update(nasabahRef, { saldo });
+        trx.delete(transRef);
+    });
+
+    alert("Transaksi dihapus");
+    loadNasabah();
+    loadRiwayat();
 }
 </script>
 
 </body>
 </html>
+
+
+
+
+
+
 
