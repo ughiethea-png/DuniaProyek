@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Tabungan Modern</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    body { background: #f3f4f6; padding: 20px; }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    #welcome { font-size: 20px; font-weight: bold; color: #111827; }
+
+    .time { font-size: 26px; font-weight: bold; text-align: right; color: #1f2937; }
+    .date { font-size: 14px; color: #6b7280; margin-top: -4px; text-align: right; }
+
+    #logoutBtn {
+      padding: 10px 15px;
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    #logoutBtn:hover { background: #dc2626; }
+
+/* === Header Container === */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+
+  color: white;
+  position: relative;
+
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+}
+
+/* Foto Admin */
+.header-left img {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.8);
+  cursor: pointer;
+  object-fit: cover;
+}
+/* Squircle iOS style */
+.squircle {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 30%;
+  -webkit-mask-image: url("data:image/svg+xml;utf8,\
+  <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>\
+  <rect x='5' y='5' width='90' height='90' rx='22' ry='22'/>\
+  </svg>");
+  mask-image: url("data:image/svg+xml;utf8,\
+  <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>\
+  <rect x='5' y='5' width='90' height='90' rx='22' ry='22'/>\
+  </svg>");
+}
+
+/* Popup Crop fullscreen */
+#cropModal {
+  position: fixed;
+  inset: 0;
+  backdrop-filter: blur(10px);
+  background: rgba(0,0,0,0.45);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.crop-box {
+  background: white;
+  padding: 15px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 380px;
+  text-align: center;
+  animation: fadeSlide .35s ease;
+}
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(30px);}
+  to   { opacity: 1; transform: translateY(0);}
+}
+
+#cropCanvas {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+
+.crop-btns {
+  display: flex;
+  justify-content: space-between;
+}
+
+.crop-btns button {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  background: #007aff;
+  color: white;
+}
+/* Center Title */
+.header-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.header-center h2 {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* Right Section (Time, Date, Logout) */
+.header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.header-right .time {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.header-right .date {
+  font-size: 12px;
+  margin-top: -3px;
+  opacity: 0.85;
+}
+
+/* Logout Button */
+#logoutBtn {
+  margin-top: 6px;
+  padding: 6px 14px;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: 0.3s ease;
+}
+
+#logoutBtn:hover {
+  background: rgba(255,255,255,0.35);
+}
+
+/* kartu */
+    .stats {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+    }
+
+    .card {
+      flex: 0 0 auto;
+      min-width: 180px;
+      padding: 18px;
+      background: white;
+      border-radius: 18px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      font-size: 15px;
+      transition: 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    }
+
+    .card span { font-size: 22px; font-weight: bold; color: #111827; }
+
+    h3 { margin: 10px 0; color: #111827; font-size: 18px; font-weight: bold; }
+
+    .table-container {
+      background: white;
+      border-radius: 18px;
+      padding: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      max-height: 350px;
+      overflow-y: auto;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      background: #2563eb;
+      color: white;
+      padding: 10px;
+      font-size: 14px;
+      /*position: sticky;*/
+      top: 0;
+    }
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 14px;
+      color: #374151;
+    }
+    tr:hover { background: #f3f4f6; }
+
+    td.name:hover {
+      cursor: pointer;
+      color: #2563eb;
+      text-decoration: underline;
+    }
+	
+/* === Full Screen Modal === */
+.modal {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.45); /* semi-dark overlay */
+  backdrop-filter: blur(6px);
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+/* Modal aktif */
+.modal.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* === Content area (Full Bottom-Sheet Style) === */
+.modal-content {
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 25px 25px 0 0;
+  box-shadow: 0 -4px 30px rgba(0,0,0,0.25);
+
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(.25,.46,.45,.94);
+}
+
+/* Saat muncul */
+.modal.show .modal-content {
+  transform: translateY(0);
+}
+
+/* Title */
+.modal-content h2 {
+  margin-top: 0;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* Input */
+.modal-content input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  font-size: 16px;
+
+  background: #f1f5f9;
+  border: none;
+  border-radius: 10px;
+  outline: none;
+}
+
+/* Buttons */
+.modal-content button {
+  width: 100%;
+  margin-top: 18px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Save button */
+#saveNasabah {
+  background: #2563eb;
+  color: white;
+}
+
+/* Cancel button */
+.cancel {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+  </style>
+</head>
+<body>
+
+<header class="app-header">
+
+  <!-- Foto Admin -->
+<div class="header-left">
+  <img id="avatarImg" src="#" class="squircle" />
+  <input type="file" id="uploadAvatar" accept="image/*" hidden />
+</div>
+
+
+  <!-- Nama Admin (Center) -->
+  <div class="header-center">
+    <h2 id="welcome">Selamat Datang, Admin</h2>
+  </div>
+
+  <!-- Tanggal + Logout -->
+  <div class="header-right">
+    <div class="time" id="time">00:00</div>
+    <div class="date" id="date">-</div>
+
+    <button id="logoutBtn">Logout</button>
+  </div>
+
+</header>
+  <!-- popup crop -->
+<div id="cropModal">
+  <div class="crop-box">
+    <canvas id="cropCanvas"></canvas>
+
+    <div class="crop-btns">
+      <button id="cancelCrop">Batal</button>
+      <button id="applyCrop">Simpan</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="stats">
+  <button id="openModalBtn" class="card" style="background:#2563eb; color:white; font-weight:bold; font-size:16px;">
+    + Tambah Nasabah
+  </button>
+
+
+  <div class="card">
+    Total Nasabah<br>
+    <span id="totalNasabah">0</span>
+  </div>
+
+  <div class="card">
+    Total Saldo<br>
+    <span id="totalSaldo">Rp 0</span>
+  </div>
+</div>
+
+<h3>History Transaksi Terakhir</h3>
+
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Nama Nasabah</th>
+        <th>Saldo</th>
+        <th>Tanggal</th>
+        <th>Jam</th>
+      </tr>
+    </thead>
+    <tbody id="historyTable"></tbody>
+  </table>
+</div>
+
+<!-- Popup full screen -->
+<div id="fullModal" class="modal">
+  <div class="modal-content">
+    <h2>Tambah Nasabah</h2>
+	<p id="msg"></p>
+    <input type="text" id="nama" placeholder="Nama Nasabah" required />
+    <input type="number" id="saldo" placeholder="Saldo Awal" required />
+
+    <button id="saveNasabah">Simpan</button>
+    <button id="closeModalBtn" class="cancel">Batal</button>
+  </div>
+</div>
+
+<script>
+// === Popup Tambah Nasabah ===
+const modal = document.getElementById("fullModal");
+const openModal = document.getElementById("openModalBtn");
+const closeModal = document.getElementById("closeModalBtn");
+
+openModal.onclick = () => modal.classList.add("show");
+closeModal.onclick = () => modal.classList.remove("show");
+
+// Klik area luar → close
+modal.onclick = e => {
+  if (e.target === modal) modal.classList.remove("show");
+};
+
+// Init IndexedDB
+let db;
+const request = indexedDB.open("AvatarDB", 1);
+
+request.onupgradeneeded = e => {
+  db = e.target.result;
+  db.createObjectStore("avatarStore");
+};
+
+request.onsuccess = e => {
+  db = e.target.result;
+  loadAvatar();
+};
+
+// Load avatar from DB
+function loadAvatar() {
+  const tx = db.transaction("avatarStore", "readonly");
+  const store = tx.objectStore("avatarStore");
+  const avatarReq = store.get("avatarImg");
+
+  avatarReq.onsuccess = () => {
+    if (avatarReq.result) {
+      document.getElementById("avatarImg").src = avatarReq.result;
+    }
+  };
+}
+
+// DOM elements
+const uploadInput = document.getElementById("uploadAvatar");
+const avatarImg = document.getElementById("avatarImg");
+const cropModal = document.getElementById("cropModal");
+const cropCanvas = document.getElementById("cropCanvas");
+const ctx = cropCanvas.getContext("2d");
+
+let img = new Image();
+
+// Open file picker
+avatarImg.onclick = () => uploadInput.click();
+
+// When user selects file
+uploadInput.onchange = e => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = ev => {
+    img.onload = () => openCrop(img);
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+};
+
+// Show crop modal
+function openCrop(image) {
+  cropCanvas.width = 300;
+  cropCanvas.height = 300;
+
+  ctx.clearRect(0, 0, 300, 300);
+  ctx.drawImage(image, 0, 0, 300, 300);
+
+  cropModal.style.display = "flex";
+}
+
+// Cancel crop
+document.getElementById("cancelCrop").onclick = () => {
+  cropModal.style.display = "none";
+};
+
+// Apply crop & save to IndexedDB
+document.getElementById("applyCrop").onclick = () => {
+  const finalData = cropCanvas.toDataURL("image/png");
+
+  avatarImg.src = finalData;
+
+  const tx = db.transaction("avatarStore", "readwrite");
+  const store = tx.objectStore("avatarStore");
+  store.put(finalData, "avatarImg");
+
+  cropModal.style.display = "none";
+};
+
+</script>
+
+<script type="module">
+import { auth, db } from "./firebase-config.js";
+import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import { collection,  onSnapshot, query,  orderBy, doc, getDoc, getDocs, addDoc, serverTimestamp  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+// ==== Jam Realtime ====
+setInterval(() => {
+  const now = new Date();
+  document.getElementById("time").innerText = now.toLocaleTimeString("id-ID");
+  document.getElementById("date").innerText = now.toLocaleDateString("id-ID");
+}, 1000);
+
+// ==== Logout ====
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  await signOut(auth);
+  window.location.href = "index.html";
+});
+
+// ==== Cek login user dan load data ====
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return window.location.href = "index.html";
+
+  const userDoc = await getDoc(doc(db, "users", user.uid));
+  const data = userDoc.data();
+  document.getElementById("welcome").innerText = `Selamat datang : ${data.name}`;
+
+  loadNasabah(user.uid);
+
+});
+
+// ambil elemen pesan
+const msg = document.getElementById("msg");
+function clearPopup(){
+  const nama = document.getElementById("nama")="";
+  const saldo = Number(document.getElementById("saldo")="");
+  const msg = document.getElementById("msg")="";
+  }
+
+
+// ketika tombol "Simpan" diklik
+document.getElementById("saveNasabah").onclick = async (e) => {
+  e.preventDefault(); // mencegah reload page otomatis
+
+  // ambil nilai input
+  const nama = document.getElementById("nama").value;
+  const saldo = Number(document.getElementById("saldo").value);
+
+  try {
+    // simpan data ke Firestore
+    await addDoc(
+      collection(db, "users", auth.currentUser.uid, "nasabah"),
+      {
+        nama,
+        saldo,
+        createdAt: new Date()
+      }
+    );
+
+    // tampilkan pesan sukses
+    msg.style.color = "green";
+    msg.textContent = "Data nasabah berhasil disimpan!";
+	modal.classList.remove("show");
+	loadNasabah(auth.currentUser.uid)
+	clearPopup();
+
+  } catch (error) {
+    msg.style.color = "red";
+    msg.textContent = "Error: " + error.message;
+  }
+};
+	
+// ==== Load Data Nasabah ====
+async function loadNasabah(uid) { 
+  //const snap = await getDocs(collection(db, "users", uid, "nasabah")); //cara pertama
+  const snap = await getDocs(collection(db, "users", auth.currentUser.uid, "nasabah"));
+  let totalNasabah = snap.size;
+  let totalSaldo = 0;
+
+  const table = document.getElementById("historyTable");
+  table.innerHTML = "";
+
+  snap.forEach(docData => {
+	  const nasabah = docData.data();
+	  const d = nasabah.createdAt.toDate();
+	  const tanggal = d.toLocaleDateString("id-ID");
+	  const jam = d.toLocaleTimeString("id-ID", { hour: '2-digit', minute: '2-digit' });
+
+	  totalSaldo += nasabah.saldo ?? 0;
+
+	  const tr = document.createElement("tr");
+	  tr.innerHTML = `
+		<td class="name" onclick="goToTransaksi('${docData.id}')">${nasabah.nama}</td>
+		<td>Rp ${nasabah.saldo.toLocaleString()}</td>
+		<td>${tanggal}</td>
+		<td>${jam}</td>
+	  `;
+
+		table.appendChild(tr);
+	});
+  document.getElementById("totalNasabah").innerText = totalNasabah;
+  document.getElementById("totalSaldo").innerText = totalSaldo.toLocaleString();
+}
+
+
+// tanpa id nasabah  (simpan dulu id nasabah untuk diambil di halaman transaksi)
+window.goToTransaksi = function(idNasabah) {
+  localStorage.setItem("selectedNasabah", idNasabah);
+  window.location.href = "transaksi.html";
+};
+
+
+</script>
+
+</body>
+</html>

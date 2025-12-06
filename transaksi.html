@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UI Transaksi Modern</title>
+<style>
+  body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 15px;
+    background: #f3f4f6;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  .nasabah-photo {
+    width: 65px;
+    height: 65px;
+    border-radius: 20px;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .header-info h2 { margin: 0; font-size: 20px; }
+  .header-info p { margin: 0; color: #555; font-size: 14px; }
+
+  .back-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  /* Card saldo */
+  .saldo-card {
+    background: white;
+    padding: 18px;
+    border-radius: 18px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+  }
+  .saldo-card h3 { margin: 0; }
+
+  /* Form transaksi */
+  .form-box {
+    background: white;
+    padding: 15px;
+    border-radius: 18px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+  }
+  .form-box input, .form-box select {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+  .btn-primary {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background: #2563eb;
+    color: white;
+    border-radius: 12px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  /* Tabel transaksi */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  th { background: #f9fafb; }
+  .btn-hapus {
+    background: #dc2626;
+    color: white;
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    margin-top: 15px;
+    cursor: pointer;
+  }
+
+.modal-edit {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn .3s;
+}
+
+.modal-box {
+  width: 320px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  transform: translateY(100px);
+  opacity: 0;
+  animation: slideUp .35s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(120px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Styling tombol */
+.modal-box button {
+  margin-top: 10px;
+  padding: 8px;
+  width: 100%;
+  border: none;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.modal-box button:nth-child(5) {
+  background: #e5e7eb;
+  color: black;
+}
+
+
+/* Overlay gelap */
+.modalTambah {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease;
+  z-index: 9999;
+}
+
+/* Saat aktif */
+.modalTambah.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Konten popup */
+.modalTambah .modal-content {
+  width: 100%;
+  max-width: 450px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 16px 16px 0 0;
+  transform: translateY(100%);
+  transition: transform .35s ease;
+}
+
+/* Slide saat aktif */
+.modalTambah.show .modal-content {
+  transform: translateY(0);
+}
+
+/* Tombol tambah */
+.btn-open {
+  padding: 10px 20px;
+  background: #0d6efd;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px;
+  width: 100%;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-simpan {
+  background: #28a745;
+  color: white;
+}
+
+.btn-batal {
+  background: #dc3545;
+  color: white;
+  margin-top: 5px;
+}
+.masuk { color: green; font-weight: bold; }
+.keluar { color: red; font-weight: bold; }
+
+</style>
+</head>
+<body>
+
+<button class="btn-hapus" onclick="goBackDashboard()">← Dashboard</button>
+
+
+<div class="header">
+  <img id="fotoNasabah" src="#" class="nasabah-photo" />
+
+  <div class="header-info">
+    <h2 id="namaNasabah">Nama Nasabah</h2>
+    <p>ID: <span id="nasabahId">-</span></p>
+	<h2>Saldo: <span id="saldo">Rp 0</span></h2>
+  </div>
+</div>
+
+<button onclick="openPopupTambah()" class="btn-open">+ Tambah</button>
+<!-- POPUP SLIDE TAMBAH TRANSAKSI -->
+<div id="tambah" class="modalTambah">
+  <div class="modal-content">
+    <h3>Tambah Transaksi</h3>
+
+    <label>Jenis Transaksi</label>
+    <select id="jenis">
+      <option value="masuk">Masuk</option>
+      <option style="color:red;" value="keluar">Keluar</option>
+    </select>
+
+    <label>Nominal</label>
+    <input type="number" id="jumlah" />
+
+    <label>Keterangan</label>
+    <input type="text" id="keterangan" />
+
+    <button onclick="simpanTransaksi()" class="btn-simpan">Simpan</button>
+    <button onclick="closePopupTambah()" class="btn-batal">Batal</button>
+  </div>
+</div>
+
+<!-- TABEL TRANSAKSI -->
+<h3>Riwayat Transaksi</h3>
+<table id="tableTransaksi">
+  <thead>
+    <tr>
+      <th>Pilih</th>
+      <th>Tanggal</th>
+      <th>Jenis</th>
+      <th>Nominal</th>
+      <th>Keterangan</th>
+      <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody id="trxTable"></tbody>
+</table>
+
+<button id="btnDeleteSelected" class="btn-hapus">Hapus Transaksi Terpilih</button>
+<button onclick="hapusNasabah()" class="btn-hapus">Hapus Nasabah</button>
+  
+<!-- POPUP EDIT -->
+<div id="editModal" class="modal-edit">
+  <div class="modal-box slideUp">
+    <h3>Edit Transaksi</h3>
+
+    <label>Jenis Transaksi</label>
+    <select id="editJenis">
+      <option value="masuk">Masuk</option>
+      <option value="keluar">Keluar</option>
+    </select>
+
+    <label>Nominal</label>
+    <input type="number" id="editNominal">
+
+    <label>Keterangan</label>
+    <input type="text" id="editKeterangan">
+
+    <button id="btnSaveEdit">Simpan Perubahan</button>
+    <button onclick="closeEdit()">Batal</button>
+  </div>
+</div>
+
+<script>
+function openPopupTambah() {
+    document.getElementById("jumlah").value = "";
+    document.getElementById("keterangan").value = "";
+  const modal = document.getElementById("tambah");
+  modal.classList.add("show");
+  
+}
+
+function closePopupTambah() {
+  const modal = document.getElementById("tambah");
+  modal.classList.remove("show");
+}
+
+// Klik luar popup untuk menutup
+document.addEventListener("click", function (e) {
+  const modal = document.getElementById("tambah");
+  if (e.target === modal) {
+    closePopupTambah();
+  }
+});
+
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+  import {
+    getFirestore, doc, getDoc, getDocs, addDoc, collection, onSnapshot, query, orderBy, increment, deleteDoc, updateDoc, writeBatch
+  } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+
+  // Firebase config
+ const firebaseConfig = {
+  apiKey: "AIzaSyD2tdSM2wvibgVztT34daOBE0FYKTTIBF4",
+  authDomain: "tabungan-702cd.firebaseapp.com",
+  databaseURL: "https://tabungan-702cd-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "tabungan-702cd",
+  storageBucket: "tabungan-702cd.firebasestorage.app",
+  messagingSenderId: "1089401460941",
+  appId: "1:1089401460941:web:5dcef23cd37963bef0b184"
+};
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+// ==== ambil id nasabah dari dashboard tanpa menampilkan id nsabah====
+const nasabahId = localStorage.getItem("selectedNasabah");
+console.log(nasabahId);
+if (!nasabahId) {
+  alert("Nasabah tidak ditemukan!");
+  window.location.href = "index.html";
+}
+
+//=======================================|
+//========== Cek login user =============|
+//=======================================|
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.href = "index.html";
+    } else {
+      loadNasabah(user.uid);
+      loadTransaksi(user.uid);
+    }
+  });
+
+//=======================================================================|
+//========== Load Data Nasabah tanpa id nasabah di web view =============|
+//=======================================================================|
+	async function loadNasabah() {
+	  const user = auth.currentUser; //cek auth 
+	  const uid = user.uid; //ambil id user
+
+	  const docRef = doc(db, "users", uid, "nasabah", nasabahId); //buat referensi data path
+	  const docSnap = await getDoc(docRef); //baca data nasabah (ID, nama :.., saldo : ...)
+	//console.log(docSnap.id);
+
+	  if (docSnap.exists()) {
+	  document.getElementById("nasabahId").textContent = docSnap.id;
+		document.getElementById("namaNasabah").textContent = docSnap.data().nama;
+		document.getElementById("saldo").innerText = docSnap.data().saldo.toLocaleString("id-ID");
+	  } else {
+		alert("Data nasabah tidak ditemukan");
+	  }
+	}
+
+//=================================================================================================|
+//=====Simpan Transaksi - tambah transaksi 1.form tidak refresh 2.saldo update 3.tabel update======|
+//==================================================================================================|  
+
+  window.simpanTransaksi = async function () {
+    const jenis = document.getElementById("jenis").value;
+    const jumlah = Number(document.getElementById("jumlah").value);
+    const ket = document.getElementById("keterangan").value;
+
+    const user = auth.currentUser;
+	const uid = user.uid;  // tambahan UID pemilik data
+    const ref = doc(db, "users", user.uid, "nasabah", nasabahId);
+    const snap = await getDoc(ref); //baca data nasabah
+    const data = snap.data();
+
+    const saldoBaru = jenis === "masuk" ? data.saldo + jumlah : data.saldo - jumlah;
+		closePopupTambah();
+  // 1. Simpan transaksi ke Firestore
+    await addDoc(collection(db, "users", user.uid, "nasabah", nasabahId, "transaksi"), {
+      jenis,
+      jumlah,
+      keterangan: ket,
+      createdAt: new Date()	  
+    });
+
+  //alert("Transaksi berhasil diproses!");
+
+    await updateDoc(ref, { saldo: saldoBaru });
+    loadNasabah(nasabahId);		
+  };
+ 
+//=======================================|
+//======== delete transaksi =============|
+//=======================================|
+document.getElementById("btnDeleteSelected").addEventListener("click", async () => {
+  const checks = document.querySelectorAll(".trxCheck:checked");
+  if (checks.length === 0) return alert("Tidak ada transaksi dipilih!");
+
+  if (!confirm(`Hapus ${checks.length} transaksi terpilih?`)) return;
+
+  const uid = auth.currentUser.uid;
+  const idNasabah = localStorage.getItem("selectedNasabah");
+  const nasabahDoc = doc(db, "users", uid, "nasabah", idNasabah);
+
+	
+  let saldoChange = 0;
+
+  try {
+    for (let c of checks) {
+      const trxId = c.getAttribute("data-id");
+      const jenis = c.getAttribute("data-jenis");
+      const nominal = Number(c.getAttribute("data-jumlah"));
+
+      // Hitung perubahan saldo dari html
+      if (jenis === "masuk") saldoChange -= nominal;
+      else saldoChange += nominal;
+
+      //await deleteDoc(doc(db, "users", uid, "nasabah", idNasabah, "transaksi", trxId));
+	  // Reference doc transaksi perbaikan 
+    const trxDoc = doc(db, "users", uid, "nasabah", nasabahId, "transaksi", trxId);
+    await deleteDoc(trxDoc);
+    }
+
+    // update saldo setelah selesai
+    if (saldoChange !== 0) {
+      await updateDoc(nasabahDoc, { saldo: increment(saldoChange) });
+    }
+    loadNasabah(nasabahId);	  //tambahan
+    //alert("Transaksi berhasil dihapus!");
+	
+  } catch (error) {
+    console.error(error);
+    alert("Gagal menghapus transaksi");
+  }
+});
+//=======================================|
+//======== hapusNasabah ok =============|
+//=======================================|
+window.hapusNasabah = async function() {
+  // 1. Konfirmasi dengan template literal
+  if (!confirm(`Yakin ingin menghapus nasabah  beserta semua transaksi?`)) {
+    return;
+  }
+
+  const uid = auth.currentUser.uid;
+
+  //const user = auth.currentUser;//2. Ambil user yang sedang login
+  if (!uid) {
+    alert("User tidak terautentikasi!");
+    return;
+  }
+
+  // referensi dokumen nasabah
+  const nasabahRef = doc(db, "users", uid, "nasabah", nasabahId); //3. Referensi dokumen nasabah
+
+  // referensi koleksi transaksi
+  const transRef = collection(db, "users", uid, "nasabah", nasabahId, "transaksi");
+
+  // ambil semua transaksi
+  const transSnap = await getDocs(transRef);
+
+  // batch delete
+  const batch = writeBatch(db);
+  transSnap.forEach(tx => {
+    batch.delete(tx.ref);//6. Hapus transaksi dalam batch
+  });
+
+  // jalankan batch hapus transaksi
+  await batch.commit();
+
+  // hapus dokumen nasabah
+  await deleteDoc(nasabahRef);
+
+  alert("Nasabah dan semua transaksinya berhasil dihapus!");
+  window.location.href = "dashboard.html";
+}
+
+//=============================================|
+//========== EDIT TRANSAKSI FINAL =============|
+//=============================================|
+let editTrxId = null;
+let oldJumlah = 0;
+let oldJenis = "";
+
+// Tambahkan event listener untuk tombol Edit
+document.addEventListener("click", (e) => {
+  // Cek jika yang diklik adalah tombol Edit
+  if (e.target.classList.contains("editBtn")) {
+
+    // Simpan id transaksi yang akan diedit
+    editTrxId = e.target.dataset.id;
+
+    // Simpan data lama untuk perhitungan saldo
+    oldJumlah = Number(e.target.dataset.jumlah);
+    oldJenis = e.target.dataset.jenis;
+
+    // Isi form popup Edit
+    document.getElementById("editJenis").value = oldJenis;
+    document.getElementById("editNominal").value = oldJumlah;
+    document.getElementById("editKeterangan").value = e.target.dataset.keterangan;
+
+    // Tampilkan modal edit
+    document.getElementById("editModal").style.display = "flex";
+  }
+});
+
+// Tutup popup
+window.closeEdit = function () {
+  document.getElementById("editModal").style.display = "none";
+};
+  
+//Proses Update + Hitung Selisih Saldo
+document.getElementById("btnSaveEdit").addEventListener("click", async () => {
+  const uid = auth.currentUser.uid; 
+  const nasabahId = localStorage.getItem("selectedNasabah");
+
+  // Ambil nilai baru dari form
+  const newJenis = document.getElementById("editJenis").value;
+  const newJumlah = Number(document.getElementById("editNominal").value);
+  const newKet = document.getElementById("editKeterangan").value;
+
+  // Hitung selisih perubahan saldo
+  let saldoDiff = 0;
+
+  if (oldJenis === "masuk") saldoDiff -= oldJumlah;
+  else saldoDiff += oldJumlah;
+
+  if (newJenis === "masuk") saldoDiff += newJumlah;
+  else saldoDiff -= newJumlah;
+  closeEdit();
+  // Update dokumen transaksi
+  await updateDoc(
+    doc(db, "users", uid, "nasabah", nasabahId, "transaksi", editTrxId), 
+    {
+      jenis: newJenis,
+      jumlah: newJumlah,
+      keterangan: newKet
+    }
+  );
+
+  // Update saldo di parent nasabah
+  await updateDoc(
+    doc(db, "users", uid, "nasabah", nasabahId),
+    { saldo: increment(saldoDiff) }
+  );
+
+  alert("Transaksi berhasil diupdate");
+      loadNasabah(nasabahId);	  //tambahan
+});
+ 
+  // ====== Tombol Kembali ======
+  window.goBackDashboard = function () {
+    window.location.href = "dashboard.html";
+  };  
+//=============================================|
+//========== perbaikan Load History ===========|
+//=============================================|
+function loadTransaksi(uid) {
+  const trxRef = collection(db, "users", uid, "nasabah", nasabahId, "transaksi");
+  const tbody = document.getElementById("trxTable");
+
+  onSnapshot(trxRef, (snapshot) => {
+    tbody.innerHTML = ""; // reset table content
+
+    snapshot.forEach(doc => {
+      const trx = doc.data();
+      const trxId = doc.id;
+
+      const tgl = trx.createdAt.toDate();
+      const tanggal = tgl.toLocaleDateString("id-ID");
+      const jam = tgl.toLocaleTimeString("id-ID", { hour: '2-digit', minute: '2-digit' });
+
+
+const jenisClass = trx.jenis === "masuk" ? "masuk" : "keluar";//tambahan untuk mewarnai jenis
+
+const tr = document.createElement("tr");
+tr.innerHTML = `
+  <td><input type="checkbox" class="trxCheck" data-id="${trxId}" data-jenis="${trx.jenis}" data-jumlah="${trx.jumlah}" data-keterangan="${trx.keterangan}"></td>
+  <td>${tanggal} ${jam}</td>
+  <td class="${jenisClass}">${trx.jenis}</td>
+  <td>Rp ${trx.jumlah.toLocaleString()}</td>
+  <td>${trx.keterangan}</td>
+  <td><button class="editBtn" 
+	data-id="${trxId}" 
+	data-jenis="${trx.jenis}" 
+	data-jumlah="${trx.jumlah}" 
+	data-keterangan="${trx.keterangan}">Edit</button></td>
+`;
+      tbody.appendChild(tr); // gunakan tbody yg benar
+    });
+  });
+}
+
+</script>
+
+
+</body>
+</html>
+
+
