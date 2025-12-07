@@ -7,7 +7,10 @@
 
 </head>
 <body>
+
 <button class="btn-primary" onclick="goBackDashboard()">Kembali ke Dashboard</button>
+
+
 <div class="stats">
 	  <img id="avatarImg" src="#" class="squircle" />
 	  <input type="file" id="uploadAvatar" accept="image/*" hidden />
@@ -23,6 +26,54 @@
 		<p style="text-align: left;">ID : <i id="nasabahId" style="text-align: left;">-</i></p>
 	</div>
 </div>
+<!--------
+<div class="saldo-card">  
+cari :
+</div>
+--------->
+<!-- Trigger (taruh di mana saja) 
+<button id="openSheetBtn" class="btn-open">+ Tambah Transaksi</button>
+
+<!-- Bottom-sheet + Backdrop 
+<div id="sheetBackdrop" class="sheet-backdrop" aria-hidden="true">Bottom-sheet + Backdrop</div>
+
+<aside id="bottomSheet" class="bottom-sheet" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="sheet-handle" id="sheetHandle" aria-hidden="true"></div>
+
+  <header class="sheet-header">
+    <div>
+      <strong>Tambah Transaksi</strong>
+      <div class="sheet-sub">Masukkan detail transaksi</div>
+    </div>
+    <button id="closeSheetBtn" class="sheet-close" aria-label="Tutup">✕</button>
+  </header>
+
+  <form id="sheetForm" class="sheet-body" onsubmit="return false;">
+    <label class="field">
+      <span class="label">Jenis</span>
+      <select id="jenis">
+        <option value="masuk">Masuk</option>
+        <option value="keluar">Keluar</option>
+      </select>
+    </label>
+
+    <label class="field">
+      <span class="label">Nominal</span>
+      <input id="jumlah" type="number" placeholder="Jumlah" required />
+    </label>
+
+    <label class="field">
+      <span class="label">Keterangan</span>
+      <input id="keterangan" type="text" placeholder="Keterangan (opsional)" />
+    </label>
+
+    <div class="sheet-actions">
+      <button onclick="simpanTransaksi()" class="btn-primary" type="button">Simpan</button>
+      <button id="cancelSheetBtn" class="btn-cancel" type="button">Batal</button>
+    </div>
+  </form>
+</aside>
+<div id="popupOverlay" class="popup-overlay hidden" onclick="closePopup()"></div>-->
 
   <!-- KARTU TAMBAH NASABAH -->
 <div class="stats">
@@ -31,6 +82,9 @@
 	<button onclick="hapusNasabah()" class="card"  style="background:red; color:white;">Hapus Nasabah</button>
 </div>
 
+<!--<button onclick="openModalBtn(tambah)" class="btn-open">+ Tambah trx</button>
+<button id="btnDeleteSelected" class="btn-hapus">Hapus trx</button>
+<button onclick="hapusNasabah()" class="btn-hapus">Hapus Nasabah</button>-->
 <!-- TABEL TRANSAKSI -->
 <h3>Riwayat Transaksi</h3>
 <div class="table-container">
@@ -86,6 +140,9 @@
 	  
     <label>Nominal</label>
 	<input type="text" id="editNominal">
+    <!--<input type="number" id="editNominal">
+	<input type="text" id="editNominal" autocomplete="off">
+	<p id="nominalError" style="color:red; font-size:14px; display:none;"></p>-->
 
     <label>Keterangan</label>
     <input type="text" id="editKeterangan">
@@ -94,6 +151,57 @@
     <button onclick="closeModalBtn(edit)" class="cancel">Batal</button>
   </div>
 </div>
+
+<!-- file awal
+<select id="jenis">
+  <option value="masuk">Masuk</option>
+  <option value="keluar">Keluar</option>
+</select>
+
+<input type="number" id="jumlah" placeholder="Jumlah" />
+<input type="text" id="keterangan" placeholder="Keterangan" />
+
+<button onclick="simpanTransaksi()">Simpan</button>
+
+<h3>Riwayat Transaksi</h3>
+<table id="tableTransaksi">
+  <thead>
+    <tr>
+      <th>Pilih</th>
+      <th>Tanggal</th>
+      <th>Jenis</th>
+      <th>Nominal</th>
+      <th>Keterangan</th>
+	  <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody id="trxTable"></tbody>
+</table>
+
+<button id="btnDeleteSelected" class="btn-hapus">Hapus Transaksi Terpilih</button>
+
+<div id="editModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <h3>Edit Transaksi</h3>
+
+    <label>Jenis Transaksi</label>
+    <select id="editJenis">
+      <option value="masuk">Masuk</option>
+      <option value="keluar">Keluar</option>
+    </select>
+
+    <label>Nominal</label>
+    <input type="number" id="editNominal">
+
+    <label>Keterangan</label>
+    <input type="text" id="editKeterangan">
+
+    <button id="btnSaveEdit">Simpan Perubahan</button>
+    <button onclick="closeEdit()">Batal</button>
+  </div>
+</div>
+
+-->
 
 <script>
 // Ambil elemen modal
@@ -121,6 +229,80 @@ document.addEventListener("click", (e) => {
 //=====================================================
 /*---kode validasi lengkap untuk input Nominal supaya:
 //=====================================================
+✔ tidak boleh minus
+✔ tidak boleh di bawah 0
+✔ boleh 0
+✔ tidak bisa mengetik koma/desimal (, atau .)
+✔ angka otomatis diformat ribuan (contoh: 1000 → 1.000)
+✔ nilai asli tetap ada dalam bentuk “angka murni”
+
+const inputNominal = document.getElementById("editNominal");
+const errorMsg = document.getElementById("nominalError");
+
+// Format angka ribuan
+function formatRibuan(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+// Event saat user mengetik
+inputNominal.addEventListener("input", () => {
+    let val = inputNominal.value;
+
+    // ❌ Larang koma/desimal
+    if (val.includes(",") || val.includes(".")) {
+        val = val.replace(/[,\.]/g, "");
+    }
+
+    // ❌ Larang karakter selain angka
+    val = val.replace(/\D/g, "");
+
+    // Jika kosong → reset
+    if (val === "") {
+        inputNominal.value = "";
+        errorMsg.style.display = "none";
+        return;
+    }
+
+    let angka = Number(val);
+
+    // ❌ Tidak boleh minus
+    if (angka < 0) {
+        errorMsg.textContent = "Nominal tidak boleh minus.";
+        errorMsg.style.display = "block";
+        inputNominal.value = "";
+        return;
+    }
+
+    // ✔ Nol masih diizinkan
+    if (angka === 0) {
+        inputNominal.value = "0";
+        errorMsg.style.display = "none";
+        return;
+    }
+
+    // ✔ Tampilkan format ribuan
+    inputNominal.value = formatRibuan(angka);
+
+    errorMsg.style.display = "none";
+});
+
+
+// Ketika form disimpan, ambil angka asli (tanpa titik)
+/*function getJumlahAsli() {
+    return Number(jumlahInput.value.replace(/\./g, ""));
+}//
+let rawNominal = inputNominal.value.replace(/\./g, ""); 
+let nominalNumber = Number(rawNominal);
+//-------------------------------------------------- */
+/*=========================================================================
+✅ JAVASCRIPT — satu fungsi untuk semua input Nominal
+✅ Tidak bisa input angka negatif
+✅ Tidak bisa input angka desimal (, atau .)
+✅ Tidak bisa mengetik simbol aneh
+✅ Auto-format ribuan saat user mengetik (misal: 15000 → 15.000)
+✅ Bisa dipakai dua input sekaligus: #jumlah (tambah) dan #editNominal (edit)
+✅ Nilai yang dikirim ke database tetap angka murni (misal 15000)
+===========================================================================*/
 // Ambil semua input nominal (tambah & edit)
 const nominalInputs = document.querySelectorAll("#jumlah, #editNominal");
 
@@ -172,7 +354,30 @@ const jumlah = Number(document.getElementById("jumlah").value.replace(/\./g, "")
 const newJumlah = Number(document.getElementById("editNominal").value.replace(/\./g, "")); //untuk edit
 
 </script>
+<!---------------------------------
+<script>
+function openPopupTambah() {
+    document.getElementById("jumlah").value = "";
+    document.getElementById("keterangan").value = "";
+  const modal = document.getElementById("tambah");
+  modal.classList.add("show");
+  
+}
 
+function closePopupTambah() {
+  const modal = document.getElementById("tambah");
+  modal.classList.remove("show");
+}
+
+// Klik luar popup untuk menutup
+document.addEventListener("click", function (e) {
+  const modal = document.getElementById("tambah");
+  if (e.target === modal) {
+    closePopupTambah();
+  }
+});
+</script>
+---------------->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
@@ -217,6 +422,29 @@ if (!nasabahId) {
       loadTransaksi(user.uid);
     }
   });
+   //const uid = user.uid;//tambahan utuk saldo realtime
+	  // === Realtime update saldo Nasabah ===
+/*function watchSaldo(uid, nasabahId) {
+  const nasabahRef = doc(db, "users", uid, "nasabah", nasabahId);
+
+  onSnapshot(nasabahRef, (docSnap) => {
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      document.getElementById("saldo").innerHTML =
+        `Rp ${data.saldo.toLocaleString()}`;
+    }
+  });
+}*/
+// watchSaldo(uid, nasabahId);
+  /*// Load Data Nasabah /transaksi.html?nasabahId=oNo1tqZOVN6ctiCFWxCH (ada id nasabah)
+  async function loadNasabah(uid) {
+    const ref = doc(db, "users", uid, "nasabah", nasabahId);
+    const snap = await getDoc(ref);
+    const data = snap.data();
+
+    document.getElementById("namaNasabah").innerText = data.nama;
+    document.getElementById("saldo").innerText = data.saldo.toLocaleString("id-ID");
+  } */
 
 //=======================================================================|
 //========== Load Data Nasabah tanpa id nasabah di web view =============|
@@ -321,6 +549,33 @@ document.getElementById("btnDeleteSelected").addEventListener("click", async () 
 //=======================================|
 //======== hapusNasabah ok =============|
 //=======================================|
+/* kode eror
+//<button onclick="hapusNasabah()" class="btn-hapus">Hapus Nasabah</button>
+async function hapusNasabah() {
+		if (!confirm("Yakin ingin menghapus nasabah ${docSnap.id} ${docSnap.data().nama} ini beserta semua transaksi?")) 
+		return;
+		
+	  const user = auth.currentUser; //cek auth 
+	  const uid = user.uid; //ambil id user
+		const nasabahRef = db.collection("users", uid, "nasabah").doc(id);
+		const transRef = nasabahRef.collection("transaksi");
+
+		// hapus semua transaksi dahulu
+		const transSnap = await transRef.get();
+		const batch = db.batch();
+		transSnap.forEach(doc => batch.delete(doc.ref));
+		await batch.commit();
+
+		// lalu hapus nasabah
+		await nasabahRef.delete();
+
+		alert("Nasabah dan semua transaksinya dihapus");
+		window.location.href = "dashboard.html";
+		
+	}*/
+	//<button onclick="hapusNasabah(nasabahId, namaNasabah)" class="btn-hapus">Hapus Nasabah</button>
+//const namaNasabah = document.getElementById("namaNasabah").textContent;
+
 window.hapusNasabah = async function() {
   // 1. Konfirmasi dengan template literal
   if (!confirm(`Yakin ingin menghapus nasabah  beserta semua transaksi?`)) {
@@ -392,6 +647,32 @@ document.addEventListener("click", (e) => {
 	//document.getElementById("editModal").modal.classList.add("show");
   }
 });
+/*
+let editTrxId = null;
+let oldNominal = 0;
+let oldJenis = "";
+
+// Buka popup dengan data transaksi
+document.addEventListener("click", function(e) {
+  if (e.target.classList.contains("editBtn")) {
+
+    editTrxId = e.target.dataset.id;
+
+    // Isi form
+    document.getElementById("editJenis").value = e.target.dataset.jenis;
+    document.getElementById("editNominal").value = e.target.dataset.jumlah;
+    document.getElementById("editKeterangan").value = e.target.dataset.keterangan;
+
+    // Tampilkan popup
+	openModalBtn(modal); //modal baru
+    //document.getElementById("editModal").style.display = "flex"; //modal lama
+  }
+});*/
+
+/*// Tutup popup lama
+window.closeEdit = function () {
+  document.getElementById("editModal").style.display = "none";
+}; //*/
   
 //Proses Update + Hitung Selisih Saldo
 document.getElementById("btnSaveEdit").addEventListener("click", async () => {
