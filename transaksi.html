@@ -3,250 +3,58 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>UI Transaksi Modern</title>
-<style>
-  body {
-    font-family: 'Inter', sans-serif;
-    margin: 0;
-    padding: 15px;
-    background: #f3f4f6;
-  }
+<title>Transaksi</title><link rel="stylesheet" href="style.css">
 
-  /* Header */
-  .header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
-  }
-  .nasabah-photo {
-    width: 65px;
-    height: 65px;
-    border-radius: 20px;
-    object-fit: cover;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  }
-  .header-info h2 { margin: 0; font-size: 20px; }
-  .header-info p { margin: 0; color: #555; font-size: 14px; }
-
-  .back-btn {
-    background: none;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-  }
-
-  /* Card saldo */
-  .saldo-card {
-    background: white;
-    padding: 18px;
-    border-radius: 18px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    margin-bottom: 20px;
-  }
-  .saldo-card h3 { margin: 0; }
-
-  /* Form transaksi */
-  .form-box {
-    background: white;
-    padding: 15px;
-    border-radius: 18px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    margin-bottom: 20px;
-  }
-  .form-box input, .form-box select {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 12px;
-    border-radius: 12px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-  }
-  .btn-primary {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    background: #2563eb;
-    color: white;
-    border-radius: 12px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-
-  /* Tabel transaksi */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  }
-  th, td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-  }
-  th { background: #f9fafb; }
-  .btn-hapus {
-    background: #dc2626;
-    color: white;
-    width: 100%;
-    padding: 12px;
-    border-radius: 12px;
-    border: none;
-    margin-top: 15px;
-    cursor: pointer;
-  }
-
-.modal-edit {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.4);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  animation: fadeIn .3s;
-}
-
-.modal-box {
-  width: 320px;
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  transform: translateY(100px);
-  opacity: 0;
-  animation: slideUp .35s ease-out forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(120px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-/* Styling tombol */
-.modal-box button {
-  margin-top: 10px;
-  padding: 8px;
-  width: 100%;
-  border: none;
-  background: #2563eb;
-  color: white;
-  cursor: pointer;
-  border-radius: 6px;
-}
-
-.modal-box button:nth-child(5) {
-  background: #e5e7eb;
-  color: black;
-}
-
-
-/* Overlay gelap */
-.modalTambah {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .3s ease;
-  z-index: 9999;
-}
-
-/* Saat aktif */
-.modalTambah.show {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Konten popup */
-.modalTambah .modal-content {
-  width: 100%;
-  max-width: 450px;
-  background: #fff;
-  padding: 20px;
-  border-radius: 16px 16px 0 0;
-  transform: translateY(100%);
-  transition: transform .35s ease;
-}
-
-/* Slide saat aktif */
-.modalTambah.show .modal-content {
-  transform: translateY(0);
-}
-
-/* Tombol tambah */
-.btn-open {
-  padding: 10px 20px;
-  background: #0d6efd;
-  border: none;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-button {
-  margin-top: 10px;
-  padding: 10px;
-  width: 100%;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-}
-
-.btn-simpan {
-  background: #28a745;
-  color: white;
-}
-
-.btn-batal {
-  background: #dc3545;
-  color: white;
-  margin-top: 5px;
-}
-.masuk { color: green; font-weight: bold; }
-.keluar { color: red; font-weight: bold; }
-
-</style>
 </head>
 <body>
+<button class="btn-primary" onclick="goBackDashboard()">Kembali ke Dashboard</button>
+<div class="stats">
+	  <img id="avatarImg" src="#" class="squircle" />
+	  <input type="file" id="uploadAvatar" accept="image/*" hidden />
 
-<button class="btn-hapus" onclick="goBackDashboard()">← Dashboard</button>
-
-
-<div class="header">
-  <img id="fotoNasabah" src="#" class="nasabah-photo" />
-
-  <div class="header-info">
-    <h2 id="namaNasabah">Nama Nasabah</h2>
-    <p>ID: <span id="nasabahId">-</span></p>
-	<h2>Saldo: <span id="saldo">Rp 0</span></h2>
-  </div>
+	<div class="card">
+		<h3 style="text-align: left;">
+		Nama 	: <span id="namaNasabah">Nama </span></h3>
+		<p style="text-align: left;">Alamat 	: <i id="alamatNasabah">alamat </i>	</p>	
+	</div>
+  
+	<div class="card">
+		<h3 style="text-align: left;">Saldo : Rp. <span id="saldo">Rp. 0</span></h3>
+		<p style="text-align: left;">ID : <i id="nasabahId" style="text-align: left;">-</i></p>
+	</div>
 </div>
 
-<button onclick="openPopupTambah()" class="btn-open">+ Tambah</button>
+  <!-- KARTU TAMBAH NASABAH -->
+<div class="stats">
+	<button onclick="openModalBtn(tambah)" class="card">+ Tambah trx</button>
+	<button id="btnDeleteSelected" class="card"  style="background:red; color:white;">Hapus Trx terpilih</button>
+	<button onclick="hapusNasabah()" class="card"  style="background:red; color:white;">Hapus Nasabah</button>
+</div>
+
+<!-- TABEL TRANSAKSI -->
+<h3>Riwayat Transaksi</h3>
+<div class="table-container">
+	<table id="tableTransaksi">
+	  <thead>
+		<tr>
+		  <th>Pilih<br>Trx</th>
+		  <th>Jam<br>Tanggal</th>
+		  <th>Jenis<br>trx</th>
+		  <th>Nominal<br>Rp.</th>
+		  <th>Keterangan</th>
+		  <th>Aksi</th>
+		</tr>
+	  </thead>
+	  <tbody id="trxTable">
+
+	  </tbody>
+	</table>
+</div>
+
 <!-- POPUP SLIDE TAMBAH TRANSAKSI -->
-<div id="tambah" class="modalTambah">
+<div id="tambah" class="modal">
   <div class="modal-content">
-    <h3>Tambah Transaksi</h3>
+    <h2>Tambah Transaksi</h2>
 
     <label>Jenis Transaksi</label>
     <select id="jenis">
@@ -255,78 +63,113 @@ button {
     </select>
 
     <label>Nominal</label>
-    <input type="number" id="jumlah" />
+    <input type="text" id="jumlah" />
 
     <label>Keterangan</label>
     <input type="text" id="keterangan" />
 
-    <button onclick="simpanTransaksi()" class="btn-simpan">Simpan</button>
-    <button onclick="closePopupTambah()" class="btn-batal">Batal</button>
+    <button onclick="simpanTransaksi()" class="save">Simpan</button>
+    <button onclick="closeModalBtn(tambah)" class="cancel">Batal</button>
   </div>
 </div>
-
-<!-- TABEL TRANSAKSI -->
-<h3>Riwayat Transaksi</h3>
-<table id="tableTransaksi">
-  <thead>
-    <tr>
-      <th>Pilih</th>
-      <th>Tanggal</th>
-      <th>Jenis</th>
-      <th>Nominal</th>
-      <th>Keterangan</th>
-      <th>Aksi</th>
-    </tr>
-  </thead>
-  <tbody id="trxTable"></tbody>
-</table>
-
-<button id="btnDeleteSelected" class="btn-hapus">Hapus Transaksi Terpilih</button>
-<button onclick="hapusNasabah()" class="btn-hapus">Hapus Nasabah</button>
-  
+ 
 <!-- POPUP EDIT -->
-<div id="editModal" class="modal-edit">
-  <div class="modal-box slideUp">
+<div id="edit" class="modal">
+  <div class="modal-content">
     <h3>Edit Transaksi</h3>
 
     <label>Jenis Transaksi</label>
     <select id="editJenis">
       <option value="masuk">Masuk</option>
-      <option value="keluar">Keluar</option>
+      <option style="color:red;" value="keluar">Keluar</option>
     </select>
-
+	  
     <label>Nominal</label>
-    <input type="number" id="editNominal">
+	<input type="text" id="editNominal">
 
     <label>Keterangan</label>
     <input type="text" id="editKeterangan">
-
-    <button id="btnSaveEdit">Simpan Perubahan</button>
-    <button onclick="closeEdit()">Batal</button>
+	
+    <button id="btnSaveEdit" class="save">Simpan Perubahan</button>
+    <button onclick="closeModalBtn(edit)" class="cancel">Batal</button>
   </div>
 </div>
 
 <script>
-function openPopupTambah() {
-    document.getElementById("jumlah").value = "";
-    document.getElementById("keterangan").value = "";
-  const modal = document.getElementById("tambah");
-  modal.classList.add("show");
-  
+// Ambil elemen modal
+const tambah = document.getElementById("tambah");
+const editModal = document.getElementById("edit");
+const trx = document.getElementById("trx");
+
+// Fungsi buka modal
+function openModalBtn(modal) {
+    modal.classList.add("show");
 }
 
-function closePopupTambah() {
-  const modal = document.getElementById("tambah");
-  modal.classList.remove("show");
+// Fungsi tutup modal
+function closeModalBtn(modal) {
+    modal.classList.remove("show");
 }
 
-// Klik luar popup untuk menutup
-document.addEventListener("click", function (e) {
-  const modal = document.getElementById("tambah");
-  if (e.target === modal) {
-    closePopupTambah();
-  }
+// EXTRA: agar modal tertutup jika klik area luar
+document.addEventListener("click", (e) => {
+    if (e.target.classList.contains("modal")) {
+        e.target.classList.remove("show");
+    }
 });
+
+//=====================================================
+/*---kode validasi lengkap untuk input Nominal supaya:
+//=====================================================
+// Ambil semua input nominal (tambah & edit)
+const nominalInputs = document.querySelectorAll("#jumlah, #editNominal");
+
+// Fungsi: Format ribuan
+function formatRibuan(angka) {
+    return angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+// Fungsi: Bersihkan input → hanya angka
+function bersihkanAngka(text) {
+    return text.replace(/[^\d]/g, ""); // Hanya angka
+}
+
+// Fungsi utama untuk validasi & format
+function handleNominalInput(e) {
+    let input = e.target;
+    let nilai = input.value;
+
+    // 1. Tidak boleh minus
+    if (nilai.includes("-")) {
+        alert("Nominal tidak boleh minus!");
+        input.value = "";
+        return;
+    }
+
+    // 2. Tidak boleh desimal (, atau . sebagai koma)
+    if (nilai.includes(",") || (nilai.includes(".") && nilai.split(".").length > 2)) {
+        alert("Nominal tidak boleh desimal!");
+        input.value = bersihkanAngka(nilai);
+        return;
+    }
+
+    // 3. Bersihkan semua titik lalu jadikan angka murni
+    let angkaBersih = bersihkanAngka(nilai);
+
+    // 4. Format ribuan
+    if (angkaBersih !== "") {
+        input.value = formatRibuan(angkaBersih);
+    }
+}
+
+// Pasang event listener ke semua input nominal
+nominalInputs.forEach(inp => {
+    inp.addEventListener("input", handleNominalInput);
+});
+
+//ambil nilai angka asli (tanpa titik) untuk simpan ke database:
+const jumlah = Number(document.getElementById("jumlah").value.replace(/\./g, "")); //untuk jumlah
+const newJumlah = Number(document.getElementById("editNominal").value.replace(/\./g, "")); //untuk edit
 
 </script>
 
@@ -354,11 +197,14 @@ document.addEventListener("click", function (e) {
 
 // ==== ambil id nasabah dari dashboard tanpa menampilkan id nsabah====
 const nasabahId = localStorage.getItem("selectedNasabah");
-console.log(nasabahId);
+//console.log(nasabahId);
 if (!nasabahId) {
   alert("Nasabah tidak ditemukan!");
   window.location.href = "index.html";
 }
+/*  // Ambil ID Nasabah dari URL (menampilkan id nasabah)
+  const urlParams = new URLSearchParams(window.location.search);
+  const nasabahId = urlParams.get("nasabahId");*/
 
 //=======================================|
 //========== Cek login user =============|
@@ -375,6 +221,7 @@ if (!nasabahId) {
 //=======================================================================|
 //========== Load Data Nasabah tanpa id nasabah di web view =============|
 //=======================================================================|
+    // 
 	async function loadNasabah() {
 	  const user = auth.currentUser; //cek auth 
 	  const uid = user.uid; //ambil id user
@@ -386,6 +233,7 @@ if (!nasabahId) {
 	  if (docSnap.exists()) {
 	  document.getElementById("nasabahId").textContent = docSnap.id;
 		document.getElementById("namaNasabah").textContent = docSnap.data().nama;
+		document.getElementById("alamatNasabah").textContent = docSnap.data().alamat;
 		document.getElementById("saldo").innerText = docSnap.data().saldo.toLocaleString("id-ID");
 	  } else {
 		alert("Data nasabah tidak ditemukan");
@@ -395,12 +243,12 @@ if (!nasabahId) {
 //=================================================================================================|
 //=====Simpan Transaksi - tambah transaksi 1.form tidak refresh 2.saldo update 3.tabel update======|
 //==================================================================================================|  
-
   window.simpanTransaksi = async function () {
     const jenis = document.getElementById("jenis").value;
-    const jumlah = Number(document.getElementById("jumlah").value);
+    //const jumlah = Number(document.getElementById("jumlah").value);
+	const jumlah = Number(document.getElementById("jumlah").value.replace(/\./g, "")); //untuk jumlah
     const ket = document.getElementById("keterangan").value;
-
+	closeModalBtn(tambah);//tutup modal
     const user = auth.currentUser;
 	const uid = user.uid;  // tambahan UID pemilik data
     const ref = doc(db, "users", user.uid, "nasabah", nasabahId);
@@ -408,7 +256,7 @@ if (!nasabahId) {
     const data = snap.data();
 
     const saldoBaru = jenis === "masuk" ? data.saldo + jumlah : data.saldo - jumlah;
-		closePopupTambah();
+		//closePopupTambah();
   // 1. Simpan transaksi ke Firestore
     await addDoc(collection(db, "users", user.uid, "nasabah", nasabahId, "transaksi"), {
       jenis,
@@ -458,6 +306,9 @@ document.getElementById("btnDeleteSelected").addEventListener("click", async () 
     // update saldo setelah selesai
     if (saldoChange !== 0) {
       await updateDoc(nasabahDoc, { saldo: increment(saldoChange) });
+	//  await updateDoc(nasabahDoc, { saldo: saldoChange });
+    //await updateDoc(ref, { saldo: saldoChange });//tambahan
+
     }
     loadNasabah(nasabahId);	  //tambahan
     //alert("Transaksi berhasil dihapus!");
@@ -477,13 +328,15 @@ window.hapusNasabah = async function() {
   }
 
   const uid = auth.currentUser.uid;
-
+  //const id = localStorage.getItem("selectedNasabah");
+  //const nasabahDoc = doc(db, "users", uid, "nasabah", idNasabah);
+  // cek user login
   //const user = auth.currentUser;//2. Ambil user yang sedang login
   if (!uid) {
     alert("User tidak terautentikasi!");
     return;
   }
-
+  //const uid = user.uid;
   // referensi dokumen nasabah
   const nasabahRef = doc(db, "users", uid, "nasabah", nasabahId); //3. Referensi dokumen nasabah
 
@@ -534,14 +387,11 @@ document.addEventListener("click", (e) => {
     document.getElementById("editKeterangan").value = e.target.dataset.keterangan;
 
     // Tampilkan modal edit
-    document.getElementById("editModal").style.display = "flex";
+    //document.getElementById("editModal").style.display = "flex";
+	openModalBtn(editModal);
+	//document.getElementById("editModal").modal.classList.add("show");
   }
 });
-
-// Tutup popup
-window.closeEdit = function () {
-  document.getElementById("editModal").style.display = "none";
-};
   
 //Proses Update + Hitung Selisih Saldo
 document.getElementById("btnSaveEdit").addEventListener("click", async () => {
@@ -550,7 +400,8 @@ document.getElementById("btnSaveEdit").addEventListener("click", async () => {
 
   // Ambil nilai baru dari form
   const newJenis = document.getElementById("editJenis").value;
-  const newJumlah = Number(document.getElementById("editNominal").value);
+  //const newJumlah = Number(document.getElementById("editNominal").value);
+  const newJumlah = Number(document.getElementById("editNominal").value.replace(/\./g, "")); //untuk edit
   const newKet = document.getElementById("editKeterangan").value;
 
   // Hitung selisih perubahan saldo
@@ -561,7 +412,7 @@ document.getElementById("btnSaveEdit").addEventListener("click", async () => {
 
   if (newJenis === "masuk") saldoDiff += newJumlah;
   else saldoDiff -= newJumlah;
-  closeEdit();
+  closeModalBtn(editModal);
   // Update dokumen transaksi
   await updateDoc(
     doc(db, "users", uid, "nasabah", nasabahId, "transaksi", editTrxId), 
@@ -580,12 +431,9 @@ document.getElementById("btnSaveEdit").addEventListener("click", async () => {
 
   alert("Transaksi berhasil diupdate");
       loadNasabah(nasabahId);	  //tambahan
+
 });
- 
-  // ====== Tombol Kembali ======
-  window.goBackDashboard = function () {
-    window.location.href = "dashboard.html";
-  };  
+
 //=============================================|
 //========== perbaikan Load History ===========|
 //=============================================|
@@ -610,9 +458,9 @@ const jenisClass = trx.jenis === "masuk" ? "masuk" : "keluar";//tambahan untuk m
 const tr = document.createElement("tr");
 tr.innerHTML = `
   <td><input type="checkbox" class="trxCheck" data-id="${trxId}" data-jenis="${trx.jenis}" data-jumlah="${trx.jumlah}" data-keterangan="${trx.keterangan}"></td>
-  <td>${tanggal} ${jam}</td>
+  <td>${jam}<br>${tanggal}</td>
   <td class="${jenisClass}">${trx.jenis}</td>
-  <td>Rp ${trx.jumlah.toLocaleString()}</td>
+  <td>${trx.jumlah.toLocaleString()}</td>
   <td>${trx.keterangan}</td>
   <td><button class="editBtn" 
 	data-id="${trxId}" 
@@ -624,6 +472,12 @@ tr.innerHTML = `
     });
   });
 }
+
+ 
+  // ====== Tombol Kembali ======
+  window.goBackDashboard = function () {
+    window.location.href = "dashboard.html";
+  };  
 
 </script>
 
