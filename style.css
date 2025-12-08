@@ -90,9 +90,9 @@
     .stats {
       display: flex;
   align-items: center;
-      gap: 2px;
+      gap: 1px;
 	  width: 100%;
-      margin-top: 5px;
+      margin-top: 3px;
       overflow-x: auto;
       padding-bottom: 2px;
     }
@@ -103,24 +103,24 @@
       background: white;
       border-radius: 12px;
       text-align: center;
-	  margin: 5px;
+	  margin: 3px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      font-size: 15px;
+      font-size: 14px;
       transition: 0.2s;
     }
     .card:hover {
       transform: translateY(-4px);
       box-shadow: 0 6px 16px rgba(0,0,0,0.1);
     }
-    .card span { font-size: 15px; font-weight: bold; color: #111827; }
+    .card span { font-size: 14px; font-weight: bold; color: #111827; }
 
     h3 { margin: 10px 0; color: #111827; font-size: 18px; font-weight: bold; }
 
 /*===  TABEL OK ====*/
     .table-container {
       background: white;
-      border-radius: 18px;
-      padding: 10px;
+      border-radius: 10px;
+      padding: 5px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       max-height: 350px;
       overflow-y: auto;
@@ -344,4 +344,5 @@
   }
 .masuk { color: green; font-weight: bold; }
 .keluar { color: red; font-weight: bold; }
+
 
