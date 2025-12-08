@@ -3,7 +3,7 @@
     body {
         font-family: Arial, sans-serif;
         background: #f3f4f6;
-        padding: 10px;
+        padding: 5px;
     }
 /*================================================================================
 ===== style dashboard ============
@@ -129,7 +129,7 @@
     th {
       background: #2563eb;
       color: white;
-      padding: 8px;
+      padding: 5px;
       font-size: 14px;
       position: sticky;
       top: 0;
@@ -344,6 +344,7 @@
   }
 .masuk { color: green; font-weight: bold; }
 .keluar { color: red; font-weight: bold; }
+
 
 
 
