@@ -9,22 +9,17 @@
 <body>
 
 <button class="btn-primary" onclick="goBackDashboard()">Kembali ke Dashboard</button>
-
-
 <div class="stats">
 	  <img id="avatarImg" src="#" class="squircle" />
 	  <input type="file" id="uploadAvatar" accept="image/*" hidden />
-
-	<div class="card">
-		<h3 style="text-align: left;">
-		Nama 	: <span id="namaNasabah">Nama </span></h3>
-		<p style="text-align: left;">Alamat 	: <i id="alamatNasabah">alamat </i>	</p>	
-	</div>
-  
-	<div class="card">
-		<h3 style="text-align: left;">Saldo : Rp. <span id="saldo">Rp. 0</span></h3>
-		<p style="text-align: left;">ID : <i id="nasabahId" style="text-align: left;">-</i></p>
-	</div>
+  <div class="card" style="text-align:left;">
+    Nama 	: <span id="namaNasabah">Nama</span><br>
+    Saldo : <b>Rp.</b> <span id="saldo">0</span>	
+  </div>
+    <div class="card" style="text-align:left;">
+    Alamat 	: <i id="alamatNasabah">alamat</i><br>
+    ID : <i id="nasabahId">-</i>	
+  </div>
 </div>
 <!--------
 <div class="saldo-card">  
@@ -207,11 +202,26 @@ cari :
 // Ambil elemen modal
 const tambah = document.getElementById("tambah");
 const editModal = document.getElementById("edit");
-const trx = document.getElementById("trx");
+//const trx = document.getElementById("trx");
 
+// Clear input berdasarkan jenis modal
+function clearModal(modal) {
+
+    if (modal.id === "tambah") { 
+        document.getElementById("jumlah").value = "";
+        document.getElementById("keterangan").value = "";
+    }
+
+    if (modal.id === "edit") {
+        document.getElementById("editNominal").value = "";
+        document.getElementById("editKeterangan").value = "";
+        document.getElementById("editJenis").value = "masuk"; 
+    }
+}
 // Fungsi buka modal
 function openModalBtn(modal) {
     modal.classList.add("show");
+	clearModal(modal)
 }
 
 // Fungsi tutup modal
@@ -350,8 +360,8 @@ nominalInputs.forEach(inp => {
 });
 
 //ambil nilai angka asli (tanpa titik) untuk simpan ke database:
-const jumlah = Number(document.getElementById("jumlah").value.replace(/\./g, "")); //untuk jumlah
-const newJumlah = Number(document.getElementById("editNominal").value.replace(/\./g, "")); //untuk edit
+//const jumlah = Number(document.getElementById("jumlah").value.replace(/\./g, "")); //untuk jumlah
+//const newJumlah = Number(document.getElementById("editNominal").value.replace(/\./g, "")); //untuk edit
 
 </script>
 <!---------------------------------
@@ -493,7 +503,7 @@ if (!nasabahId) {
       createdAt: new Date()	  
     });
 
-  //alert("Transaksi berhasil diproses!");
+    alert("Transaksi berhasil diproses!");
 
     await updateDoc(ref, { saldo: saldoBaru });
     loadNasabah(nasabahId);		
@@ -539,7 +549,7 @@ document.getElementById("btnDeleteSelected").addEventListener("click", async () 
 
     }
     loadNasabah(nasabahId);	  //tambahan
-    //alert("Transaksi berhasil dihapus!");
+    alert("Transaksi berhasil dihapus!");
 	
   } catch (error) {
     console.error(error);
