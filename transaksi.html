@@ -21,66 +21,13 @@
     ID : <i id="nasabahId">-</i>	
   </div>
 </div>
-<!--------
-<div class="saldo-card">  
-cari :
-</div>
---------->
-<!-- Trigger (taruh di mana saja) 
-<button id="openSheetBtn" class="btn-open">+ Tambah Transaksi</button>
-
-<!-- Bottom-sheet + Backdrop 
-<div id="sheetBackdrop" class="sheet-backdrop" aria-hidden="true">Bottom-sheet + Backdrop</div>
-
-<aside id="bottomSheet" class="bottom-sheet" role="dialog" aria-modal="true" aria-hidden="true">
-  <div class="sheet-handle" id="sheetHandle" aria-hidden="true"></div>
-
-  <header class="sheet-header">
-    <div>
-      <strong>Tambah Transaksi</strong>
-      <div class="sheet-sub">Masukkan detail transaksi</div>
-    </div>
-    <button id="closeSheetBtn" class="sheet-close" aria-label="Tutup">✕</button>
-  </header>
-
-  <form id="sheetForm" class="sheet-body" onsubmit="return false;">
-    <label class="field">
-      <span class="label">Jenis</span>
-      <select id="jenis">
-        <option value="masuk">Masuk</option>
-        <option value="keluar">Keluar</option>
-      </select>
-    </label>
-
-    <label class="field">
-      <span class="label">Nominal</span>
-      <input id="jumlah" type="number" placeholder="Jumlah" required />
-    </label>
-
-    <label class="field">
-      <span class="label">Keterangan</span>
-      <input id="keterangan" type="text" placeholder="Keterangan (opsional)" />
-    </label>
-
-    <div class="sheet-actions">
-      <button onclick="simpanTransaksi()" class="btn-primary" type="button">Simpan</button>
-      <button id="cancelSheetBtn" class="btn-cancel" type="button">Batal</button>
-    </div>
-  </form>
-</aside>
-<div id="popupOverlay" class="popup-overlay hidden" onclick="closePopup()"></div>-->
-
   <!-- KARTU TAMBAH NASABAH -->
 <div class="stats">
 	<button onclick="openModalBtn(tambah)" class="card">+ Tambah trx</button>
-	<button id="btnDeleteSelected" class="card"  style="background:red; color:white;">Hapus Trx terpilih</button>
+	<button id="btnDeleteSelected" class="card"  style="background:red; color:white;">Hapus Trx</button>
 	<button onclick="hapusNasabah()" class="card"  style="background:red; color:white;">Hapus Nasabah</button>
 </div>
 
-<!--<button onclick="openModalBtn(tambah)" class="btn-open">+ Tambah trx</button>
-<button id="btnDeleteSelected" class="btn-hapus">Hapus trx</button>
-<button onclick="hapusNasabah()" class="btn-hapus">Hapus Nasabah</button>-->
-<!-- TABEL TRANSAKSI -->
 <h3>Riwayat Transaksi</h3>
 <div class="table-container">
 	<table id="tableTransaksi">
@@ -775,5 +722,6 @@ tr.innerHTML = `
 
 </body>
 </html>
+
 
 
