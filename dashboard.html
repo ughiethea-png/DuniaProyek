@@ -43,27 +43,34 @@
   </div>
 </div>
 
-  <!-- KARTU TAMBAH NASABAH -->
+  <!-- KARTU NASABAH -->
 <div class="stats">
+<!-- KARTU TOTAL NASABAH & SALDO-->
+  <div class="card" style="text-align:left;">
+    Total Nasabah : <span id="totalNasabah">0</span><br>
+    Total Saldo : <span id="totalSaldo">Rp 0</span>	
+  </div>
+  
   <button id="openModalBtn" class="card" style="background:#2563eb; color:white; font-weight:bold; font-size:16px;">
     + Nasabah
   </button>
   
-  <!-- KARTU TOTAL NASABAH -->
+  <!-- KARTU TOTAL NASABAH 
   <div class="card">
     Total Nasabah<br>
     <span id="totalNasabah">0</span>
   </div>
   
-  <!-- KARTU TOTAL SALDO -->
+  <!-- KARTU TOTAL SALDO 
   <div class="card">
     Total Saldo<br>
     <span id="totalSaldo">Rp 0</span>
-  </div>
+  </div>-->
 </div>
 
   <!-- History Transaksi Terakhir -->
 <h3>History Nasabah</h3>
+
 <div class="table-container">
   <table>
     <thead>
@@ -76,6 +83,7 @@
     </thead>
     <tbody id="historyTable"></tbody>
   </table>
+  <i type="muted">klik nama nasabah untuk lihat detail<i>
 </div>
 
 <!-- Popup full screen -->
@@ -92,13 +100,27 @@
   </div>
 </div>
 
+<!-- halaman tambah nasabah
+<div class="container">
+    <h2>Tambah Nasabah</h2>
+    <form id="formNasabah">
+      <input type="text" id="" placeholder="Nama Nasabah" required>
+      <input type="number" id="" placeholder="Saldo Awal" required>
+      <button type="submit">Simpan Nasabah</button>
+    </form> -->
+
 <script>
 // === Popup Tambah Nasabah ===
 const modal = document.getElementById("fullModal");
 const openModal = document.getElementById("openModalBtn");
 const closeModal = document.getElementById("closeModalBtn");
 
-openModal.onclick = () => modal.classList.add("show");
+function resetModal(modal) {
+	document.getElementById("nama").value = "";
+	document.getElementById("alamat").value = "";
+	}
+		
+openModal.onclick = () => (modal.classList.add("show"),resetModal(modal));
 closeModal.onclick = () => modal.classList.remove("show");
 
 // Klik area luar → close
@@ -186,6 +208,14 @@ document.getElementById("applyCrop").onclick = () => {
 
   cropModal.style.display = "none";
 };
+/*
+🎉 Semua fitur termasuk:
+✔ Squircle avatar iOS style
+✔ Upload avatar
+✔ Full-screen crop modal
+✔ Smooth animation
+✔ Simpan avatar ke IndexedDB
+✔ Reload tetap tersimpan*/
 
 </script>
 
@@ -214,18 +244,35 @@ onAuthStateChanged(auth, async (user) => {
   const userDoc = await getDoc(doc(db, "users", user.uid));
   const data = userDoc.data();
   document.getElementById("welcome").innerText = `Selamat datang : ${data.name}`;
+//localStorage.setItem("idUser", user.uid);//
   loadNasabah(user.uid);
-
+  // ==== Jalankan Listener Saat User Login ====
+   // startRealtimeDashboard();
+  //startRealtimeHistory();
 });
+/*/ ==== 1. Realtime Listener Total Nasabah + Total Saldo ====
+function startRealtimeDashboard() {
+  const nasabahRef = collection(db, "users", auth.currentUser.uid, "nasabah");
 
-// ambil elemen pesan
-const msg = document.getElementById("msg");
-function clearPopup(){
-  const nama = document.getElementById("nama")="";
-  const alamat = document.getElementById("alamat")=""; //tambah alamat
-  const saldo = Number(document.getElementById("saldo")="");
-  const msg = document.getElementById("msg")="";
-  }
+  onSnapshot(nasabahRef, (snapshot) => {
+    let totalSaldo = 0;
+    let totalNasabah = snapshot.size;
+
+    snapshot.forEach(doc => {
+      totalSaldo += Number(doc.data().saldo || 0);
+    });
+
+    document.getElementById("totalNasabah").textContent = totalNasabah;
+    document.getElementById("totalSaldo").textContent =
+      "Rp " + totalSaldo.toLocaleString();
+  });
+}*/
+
+// ==== simpan Data Nasabah ====
+/*<p id="msg"></p>
+<input type="text" id="nama" placeholder="Nama Nasabah" required />
+<input type="number" id="saldo" placeholder="Saldo Awal" required />
+<button id="saveNasabah">Simpan</button>*/
 
 
 // ketika tombol "Simpan" diklik
@@ -248,17 +295,17 @@ document.getElementById("saveNasabah").onclick = async (e) => {
         createdAt: new Date()
       }
     );
-
     // tampilkan pesan sukses
-    msg.style.color = "green";
-    msg.textContent = "Data nasabah berhasil disimpan!";
+    //msg.style.color = "green";
+    //msg.textContent = "Data nasabah berhasil disimpan!";
+	alert("Data nasabah berhasil disimpan!");
 	//modal.classList.remove("show");
 	loadNasabah(auth.currentUser.uid)
-	clearPopup();
 
   } catch (error) {
-    msg.style.color = "red";
-    msg.textContent = "Error: " + error.message;
+    //msg.style.color = "red";
+    //msg.textContent = "Error: " + error.message;
+	alert("Error: " + error.message);
   }
 };
 	
@@ -294,6 +341,12 @@ async function loadNasabah(uid) {
   document.getElementById("totalSaldo").innerText = totalSaldo.toLocaleString();
 }
 
+// ==== Event Klik ke Halaman Transaksi ====
+/*window.goToTransaksi = function(idNasabah) {
+  localStorage.setItem("selectedNasabah", idNasabah);
+  //window.location.href = "transaksi.html";
+  window.location.href = `transaksi.html?nasabahId=${idNasabah}`;
+};*///menampilkan id nasabah
 
 // tanpa id nasabah  (simpan dulu id nasabah untuk diambil di halaman transaksi)
 window.goToTransaksi = function(idNasabah) {
